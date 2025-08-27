@@ -14,23 +14,23 @@
 
 """Common utilities used by the MCP server."""
 
-from typing import Any, Dict
-
-from google.analytics import admin_v1beta, data_v1beta
-from google.api_core.gapic_v1.client_info import ClientInfo
 from importlib import metadata
+from typing import Any
+
 import google.auth
 import proto
+from google.analytics import admin_v1beta, data_v1beta
+from google.api_core.gapic_v1.client_info import ClientInfo
 
 
-def _get_package_version_with_fallback():
+def _get_package_version_with_fallback() -> str:
     """Returns the version of the package.
 
     Falls back to 'unknown' if the version can't be resolved.
     """
     try:
         return metadata.version("analytics-mcp")
-    except:
+    except Exception:
         return "unknown"
 
 
@@ -48,7 +48,7 @@ _READ_ONLY_ANALYTICS_SCOPE = (
 def _create_credentials() -> google.auth.credentials.Credentials:
     """Returns Application Default Credentials with read-only scope."""
     (credentials, _) = google.auth.default(scopes=[_READ_ONLY_ANALYTICS_SCOPE])
-    return credentials
+    return credentials  # type: ignore[no-any-return]
 
 
 def create_admin_api_client() -> admin_v1beta.AnalyticsAdminServiceAsyncClient:
@@ -86,17 +86,15 @@ def construct_property_rn(property_value: int | str) -> str:
                 property_num = int(numeric_part)
     if property_num is None:
         raise ValueError(
-            (
-                f"Invalid property ID: {property_value}. "
-                "A valid property value is either a number or a string starting "
-                "with 'properties/' and followed by a number."
-            )
+            f"Invalid property ID: {property_value}. "
+            "A valid property value is either a number or a string starting "
+            "with 'properties/' and followed by a number."
         )
 
     return f"properties/{property_num}"
 
 
-def proto_to_dict(obj: proto.Message) -> Dict[str, Any]:
+def proto_to_dict(obj: proto.Message) -> dict[str, Any]:
     """Converts a proto message to a dictionary."""
     return type(obj).to_dict(
         obj, use_integers_for_enums=False, preserving_proto_field_name=True
