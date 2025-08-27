@@ -52,10 +52,7 @@ google-analytics-mcp = "analytics_mcp.server:run_server"
 [project.optional-dependencies]
 dev = [
     "black",
-    "nox >=2025.5.1, <2026"
-]
-
-lint=[
+    "nox >=2025.5.1, <2026",
     "ruff",
     "mypy",
 ]

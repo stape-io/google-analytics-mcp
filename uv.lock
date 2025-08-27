@@ -22,10 +22,8 @@ dependencies = [
 [package.optional-dependencies]
 dev = [
     { name = "black" },
-    { name = "nox" },
-]
-lint = [
     { name = "mypy" },
+    { name = "nox" },
     { name = "ruff" },
 ]
 
@@ -37,11 +35,11 @@ requires-dist = [
     { name = "google-auth", specifier = "~=2.40" },
     { name = "httpx", specifier = ">=0.28.1" },
     { name = "mcp", extras = ["cli"], specifier = ">=1.2.0" },
-    { name = "mypy", marker = "extra == 'lint'" },
+    { name = "mypy", marker = "extra == 'dev'" },
     { name = "nox", marker = "extra == 'dev'", specifier = ">=2025.5.1,<2026" },
-    { name = "ruff", marker = "extra == 'lint'" },
+    { name = "ruff", marker = "extra == 'dev'" },
 ]
-provides-extras = ["dev", "lint"]
+provides-extras = ["dev"]
 
 [[package]]
 name = "annotated-types"
