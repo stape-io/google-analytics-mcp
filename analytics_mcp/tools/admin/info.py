@@ -14,7 +14,7 @@
 
 """Tools for gathering Google Analytics account and property information."""
 
-from typing import Any, Dict, List
+from typing import Any
 
 from analytics_mcp.coordinator import mcp
 from analytics_mcp.tools.utils import (
@@ -26,7 +26,7 @@ from google.analytics import admin_v1beta
 
 
 @mcp.tool()
-async def get_account_summaries() -> List[Dict[str, Any]]:
+async def get_account_summaries() -> list[dict[str, Any]]:
     """Retrieves information about the user's Google Analytics accounts and properties."""
 
     # Uses an async list comprehension so the pager returned by
@@ -38,8 +38,8 @@ async def get_account_summaries() -> List[Dict[str, Any]]:
     return all_pages
 
 
-@mcp.tool(title="List links to Google Ads accounts")
-async def list_google_ads_links(property_id: int | str) -> List[Dict[str, Any]]:
+@mcp.tool(title="list links to Google Ads accounts")
+async def list_google_ads_links(property_id: int | str) -> list[dict[str, Any]]:
     """Returns a list of links to Google Ads accounts for a property.
 
     Args:
@@ -60,7 +60,7 @@ async def list_google_ads_links(property_id: int | str) -> List[Dict[str, Any]]:
 
 
 @mcp.tool(title="Gets details about a property")
-async def get_property_details(property_id: int | str) -> Dict[str, Any]:
+async def get_property_details(property_id: int | str) -> dict[str, Any]:
     """Returns details about a property.
     Args:
         property_id: The Google Analytics property ID. Accepted formats are:
