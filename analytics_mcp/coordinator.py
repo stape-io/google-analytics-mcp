@@ -36,9 +36,8 @@ def _create_mcp_server() -> FastMCP:
     if settings.auth is not None:
         token_verifier = GoogleTokenVerifier(required_scopes=settings.auth.required_scopes)
     settings_dict = settings.model_dump()
-    print(f"Starting MCP server with settings: {settings_dict}")
     mcp = FastMCP(
-        "Google Analytics Server",
+        "Google Analytics MCP Server",
         token_verifier=token_verifier,
         **settings_dict
     )

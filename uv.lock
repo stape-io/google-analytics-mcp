@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 2
 requires-python = ">=3.10"
 resolution-markers = [
     "python_full_version >= '3.13'",
@@ -30,11 +30,11 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "black", marker = "extra == 'dev'" },
-    { name = "google-analytics-admin", specifier = "==0.24.1" },
+    { name = "google-analytics-admin", specifier = "==0.25.0" },
     { name = "google-analytics-data", specifier = "==0.18.19" },
-    { name = "google-auth", specifier = "~=2.40" },
+    { name = "google-auth", specifier = "~=2.41.1" },
     { name = "httpx", specifier = ">=0.28.1" },
-    { name = "mcp", extras = ["cli"], specifier = ">=1.2.0" },
+    { name = "mcp", extras = ["cli"], specifier = ">=1.16.0" },
     { name = "mypy", marker = "extra == 'dev'" },
     { name = "nox", marker = "extra == 'dev'", specifier = ">=2025.5.1,<2026" },
     { name = "ruff", marker = "extra == 'dev'" },
@@ -277,7 +277,7 @@ wheels = [
 
 [[package]]
 name = "google-analytics-admin"
-version = "0.24.1"
+version = "0.25.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "google-api-core", extra = ["grpc"] },
@@ -285,9 +285,9 @@ dependencies = [
     { name = "proto-plus" },
     { name = "protobuf" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/08/a0/14558ffb0521bcb1d0ea9a87d128ddb784dc17cfc05a5cc9a0c9262f3bca/google_analytics_admin-0.24.1.tar.gz", hash = "sha256:619f31a876a281d5475fcbefc2b46a1555f8dbff29c4bac8f0babedd29d2dec5", size = 619019, upload-time = "2025-06-25T12:10:57.634Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/e7/8f/fe546380680c3a905a4edec573fb0d701555025da3530c863d0d864ce917/google_analytics_admin-0.25.0.tar.gz", hash = "sha256:c4d95336bb404f39c4c72f288d2ea1eb141ca74aaa7076ec82af5a9c2cc11ba1", size = 609466, upload-time = "2025-09-02T15:39:55.911Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/72/05/c0361e8287b430fca6c233c65e236c4f5ae1ba63a43e76ce31e76bde7641/google_analytics_admin-0.24.1-py3-none-any.whl", hash = "sha256:4313c676a4fc5dce4d8ca727c6f1e777ae0233986c0ee41e83a4e78ba305d0f6", size = 397994, upload-time = "2025-06-25T12:10:56.49Z" },
+    { url = "https://files.pythonhosted.org/packages/bf/54/db60f156e35acd7c834e7c0fa2aa984c465c992c944f7c837e296b8da8ce/google_analytics_admin-0.25.0-py3-none-any.whl", hash = "sha256:0594745ac20fd7c56007bbc2cddd4cce417bb466ebf683ad575d361c6687c1c0", size = 391444, upload-time = "2025-09-02T15:39:10.779Z" },
 ]
 
 [[package]]
@@ -329,16 +329,16 @@ grpc = [
 
 [[package]]
 name = "google-auth"
-version = "2.40.3"
+version = "2.41.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "cachetools" },
     { name = "pyasn1-modules" },
     { name = "rsa" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/9e/9b/e92ef23b84fa10a64ce4831390b7a4c2e53c0132568d99d4ae61d04c8855/google_auth-2.40.3.tar.gz", hash = "sha256:500c3a29adedeb36ea9cf24b8d10858e152f2412e3ca37829b3fa18e33d63b77", size = 281029, upload-time = "2025-06-04T18:04:57.577Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/a8/af/5129ce5b2f9688d2fa49b463e544972a7c82b0fdb50980dafee92e121d9f/google_auth-2.41.1.tar.gz", hash = "sha256:b76b7b1f9e61f0cb7e88870d14f6a94aeef248959ef6992670efee37709cbfd2", size = 292284, upload-time = "2025-09-30T22:51:26.363Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/17/63/b19553b658a1692443c62bd07e5868adaa0ad746a0751ba62c59568cd45b/google_auth-2.40.3-py2.py3-none-any.whl", hash = "sha256:1370d4593e86213563547f97a92752fc658456fe4514c809544f330fed45a7ca", size = 216137, upload-time = "2025-06-04T18:04:55.573Z" },
+    { url = "https://files.pythonhosted.org/packages/be/a4/7319a2a8add4cc352be9e3efeff5e2aacee917c85ca2fa1647e29089983c/google_auth-2.41.1-py2.py3-none-any.whl", hash = "sha256:754843be95575b9a19c604a848a41be03f7f2afd8c019f716dc1f51ee41c639d", size = 221302, upload-time = "2025-09-30T22:51:24.212Z" },
 ]
 
 [[package]]
@@ -511,7 +511,7 @@ wheels = [
 
 [[package]]
 name = "mcp"
-version = "1.13.1"
+version = "1.16.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "anyio" },
@@ -526,9 +526,9 @@ dependencies = [
     { name = "starlette" },
     { name = "uvicorn", marker = "sys_platform != 'emscripten'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/66/3c/82c400c2d50afdac4fbefb5b4031fd327e2ad1f23ccef8eee13c5909aa48/mcp-1.13.1.tar.gz", hash = "sha256:165306a8fd7991dc80334edd2de07798175a56461043b7ae907b279794a834c5", size = 438198, upload-time = "2025-08-22T09:22:16.061Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/3d/a1/b1f328da3b153683d2ec34f849b4b6eac2790fb240e3aef06ff2fab3df9d/mcp-1.16.0.tar.gz", hash = "sha256:39b8ca25460c578ee2cdad33feeea122694cfdf73eef58bee76c42f6ef0589df", size = 472918, upload-time = "2025-10-02T16:58:20.631Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/19/3f/d085c7f49ade6d273b185d61ec9405e672b6433f710ea64a90135a8dd445/mcp-1.13.1-py3-none-any.whl", hash = "sha256:c314e7c8bd477a23ba3ef472ee5a32880316c42d03e06dcfa31a1cc7a73b65df", size = 161494, upload-time = "2025-08-22T09:22:14.705Z" },
+    { url = "https://files.pythonhosted.org/packages/c9/0e/7cebc88e17daf94ebe28c95633af595ccb2864dc2ee7abd75542d98495cc/mcp-1.16.0-py3-none-any.whl", hash = "sha256:ec917be9a5d31b09ba331e1768aa576e0af45470d657a0319996a20a57d7d633", size = 167266, upload-time = "2025-10-02T16:58:19.039Z" },
 ]
 
 [package.optional-dependencies]
