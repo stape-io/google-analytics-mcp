@@ -74,18 +74,28 @@ jobs:
     needs:
       - generate-image-tag
       - build-and-push-image
-    runs-on: kratos-gcp
-    container:
-      image: alpine/k8s:1.32.3
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Workaround
-        run: git config --system --add safe.directory '*'
+      - id: auth
+        name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GOOGLE_WORKLOAD_IDENTITY_PROVIDER_DEV }}
+          service_account: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_DEV }}
+          token_format: access_token
 
-      - name: Update Image Tag
-        run: sed -i "s/latest/${{ needs.generate-image-tag.outputs.image_tag }}/g" chart/values-dev.yaml
+      - name: Get GKE credentials
+        uses: google-github-actions/get-gke-credentials@v2
+        with:
+          project_id: ${{ secrets.PROJECT_ID_DEV }}
+          cluster_name: ${{ secrets.GKE_CLUSTER_DEV }}
+          location: ${{ secrets.GKE_LOCATION_DEV }}
+
+      - name: Setup helm
+        uses: azure/setup-helm@v4.3.0
 
       - name: Upgrade Helm Chart
         run: helm upgrade --install --namespace ${{ env.NAME }}-dev --create-namespace ${{ env.NAME }}-dev chart/ --values chart/values-dev.yaml --wait
