@@ -3,9 +3,6 @@ name: Deploy to Non-production
 run-name: Deploy to 'dev'
 
 on:
-  push:
-    branches:
-    - "OPS-1336/ga-mcp-deployment-setup"
   workflow_dispatch:
     inputs:
       environment:
