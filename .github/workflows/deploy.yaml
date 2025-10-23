@@ -17,6 +17,10 @@ on:
 env:
   NAME: mcp-ga
 
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   generate-image-tag:
     name: Generate Docker Image Tag
