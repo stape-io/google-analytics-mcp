@@ -101,5 +101,8 @@ jobs:
       - name: Setup helm
         uses: azure/setup-helm@v4.3.0
 
+      - name: Update Image Tag
+        run: sed -i "s/latest/${{ needs.generate-image-tag.outputs.image_tag }}/g" chart/values-dev.yaml
+
       - name: Upgrade Helm Chart
         run: helm upgrade --install --namespace ${{ env.NAME }}-dev --create-namespace ${{ env.NAME }}-dev chart/ --values chart/values-dev.yaml --wait
