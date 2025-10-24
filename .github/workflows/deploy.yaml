@@ -4,12 +4,6 @@ run-name: Deploy to 'dev'
 
 on:
   workflow_dispatch:
-    inputs:
-      environment:
-        type: choice
-        description: 'The environment to deploy to.'
-        options:
-          - dev
 
 env:
   NAME: mcp-ga
