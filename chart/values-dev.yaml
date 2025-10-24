@@ -1,0 +1,3 @@
+host: "mcp-ga.stape.dev"
+image:
+  tag: "latest"

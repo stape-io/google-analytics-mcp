@@ -101,3 +101,6 @@ ignore = [
     "C408",  # Unnecessary `dict` call
     "E501",  # Line too long
 ]
+[tool.setuptools.packages.find]
+include = ["analytics_mcp*"]
+exclude = ["tests*", "chart*"]
