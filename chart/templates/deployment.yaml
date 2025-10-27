@@ -29,9 +29,9 @@ spec:
             - name: FASTMCP_TRANSPORT
               value: "streamable-http"
             - name: FASTMCP_AUTH__ISSUER_URL
-              value: "https://mcp-auth.stape.dev"
+              value: "https://mcp-auth.{{ .Values.domain }}"
             - name: FASTMCP_AUTH__RESOURCE_SERVER_URL
-              value: "https://mcp-ga.stape.dev/mcp"
+              value: "https://mcp-ga.{{ .Values.domain }}/mcp"
             - name: FASTMCP_AUTH__REQUIRED_SCOPES
               value: '["https://www.googleapis.com/auth/analytics.readonly"]'
           resources:
