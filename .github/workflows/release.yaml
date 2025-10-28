@@ -1,8 +1,11 @@
-name: Deploy to Non-production
+name: Release to prod
 
-run-name: Deploy to 'dev'
+run-name: Deploy to 'prod'
 
 on:
+  push:
+    branches:
+    - main
   workflow_dispatch:
 
 env:
@@ -26,7 +29,7 @@ jobs:
       id-token: write
     env:
       REGISTRY: europe-west1-docker.pkg.dev
-      REPOSITORY: stape-development/stape
+      REPOSITORY: stape-production/stape
       IMAGE: mcp-ga
     steps:
       - name: Checkout
@@ -36,8 +39,8 @@ jobs:
         name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
-          workload_identity_provider: projects/664050025753/locations/global/workloadIdentityPools/github/providers/stape-io
-          service_account: github-actions@stape-development.iam.gserviceaccount.com
+          workload_identity_provider: projects/207001532273/locations/global/workloadIdentityPools/github/providers/stape-io
+          service_account: github-actions@stape-production.iam.gserviceaccount.com
           token_format: access_token
 
       - name: Login to Google Artifact Registry
@@ -65,7 +68,7 @@ jobs:
             github_run_attempt=${{ github.run_attempt }}
 
   deploy-to-kubernetes:
-    name: Deploy to 'dev'
+    name: Deploy to 'prod'
     needs:
       - generate-image-tag
       - build-and-push-image
@@ -78,22 +81,22 @@ jobs:
         name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
-          workload_identity_provider: projects/664050025753/locations/global/workloadIdentityPools/github/providers/stape-io
-          service_account: github-actions@stape-development.iam.gserviceaccount.com
+          workload_identity_provider: projects/207001532273/locations/global/workloadIdentityPools/github/providers/stape-io
+          service_account: github-actions@stape-production.iam.gserviceaccount.com
           token_format: access_token
 
       - name: Get GKE credentials
         uses: google-github-actions/get-gke-credentials@v2
         with:
-          project_id: stape-development
-          cluster_name: ${{ secrets.GKE_CLUSTER_DEV }}
-          location: ${{ secrets.GKE_LOCATION_DEV }}
+          project_id: ${{ secrets.PROJECT_ID }}
+          cluster_name: ${{ secrets.GKE_CLUSTER }}
+          location: ${{ secrets.GKE_LOCATION }}
 
       - name: Setup helm
         uses: azure/setup-helm@v4.3.0
 
       - name: Update Image Tag
-        run: sed -i "s/latest/${{ needs.generate-image-tag.outputs.image_tag }}/g" chart/values-dev.yaml
+        run: sed -i "s/latest/${{ needs.generate-image-tag.outputs.image_tag }}/g" chart/values-prod.yaml
 
       - name: Upgrade Helm Chart
-        run: helm upgrade --install --namespace ${{ env.NAME }}-dev --create-namespace ${{ env.NAME }}-dev chart/ --values chart/values-dev.yaml --wait
+        run: helm upgrade --install --namespace ${{ env.NAME }} --create-namespace ${{ env.NAME }} chart/ --values chart/values-prod.yaml --wait
