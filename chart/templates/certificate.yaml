@@ -8,5 +8,5 @@ spec:
   dnsNames:
     - mcp-ga.{{ .Values.domain }}
   issuerRef:
-    name: letsencrypt-prod
+    name: cloudflare
     kind: ClusterIssuer
