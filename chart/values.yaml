@@ -3,7 +3,7 @@ image:
   name: "mcp-ga"
   tag: "latest"
 
-host: "example.com"
+domain: "example.com"
 
 resources:
   requests:
