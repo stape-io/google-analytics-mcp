@@ -4,8 +4,8 @@ run-name: Deploy to 'prod'
 
 on:
   push:
-  #  branches:
-  #  - main
+    #branches:
+    #- main
   workflow_dispatch:
 
 env:
