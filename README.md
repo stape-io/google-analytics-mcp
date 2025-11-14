@@ -33,7 +33,7 @@ To avoid this issue:
 
 **Clearing MCP Cache**
 
-[mcp-remote](https://github.com/geelen/mcp-remote#readme)stores all the credential information inside ~/.mcp-auth(or wherever your MCP_REMOTE_CONFIG_DIR points to). Ifyou're having persistent issues, try running:
+[mcp-remote](https://github.com/geelen/mcp-remote#readme) stores all the credential information inside ~/.mcp-auth(or wherever your MCP_REMOTE_CONFIG_DIR points to). Ifyou're having persistent issues, try running:
 You can run rm -rf ~/.mcp-auth to clear any locallystored state and tokens.
 
 ```bash
