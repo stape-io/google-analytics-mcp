@@ -46,9 +46,11 @@ def _create_mcp_server() -> FastMCP:
     if mcp.settings.auth and mcp.settings.auth.resource_server_url:
         protected_resource_metadata = ProtectedResourceMetadata(
             resource=mcp.settings.auth.resource_server_url,
-            authorization_servers=[mcp.settings.auth.issuer_url]
-            if mcp.settings.auth.issuer_url
-            else [],
+            authorization_servers=(
+                [mcp.settings.auth.issuer_url]
+                if mcp.settings.auth.issuer_url
+                else []
+            ),
             scopes_supported=mcp.settings.auth.required_scopes,
         )
 

@@ -57,6 +57,7 @@ if mcp.settings.auth is not None:
         return google.oauth2.credentials.Credentials(
             token=access_token.token, scopes=[_READ_ONLY_ANALYTICS_SCOPE]
         )
+
 else:
 
     def _create_credentials() -> Credentials:
