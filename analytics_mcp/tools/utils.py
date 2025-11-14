@@ -50,14 +50,20 @@ _READ_ONLY_ANALYTICS_SCOPE = (
 )
 
 if mcp.settings.auth is not None:
+
     def _create_credentials() -> Credentials:
         access_token = get_access_token()
         assert access_token is not None, "Failed to obtain access token"
-        return google.oauth2.credentials.Credentials(token=access_token.token, scopes=[_READ_ONLY_ANALYTICS_SCOPE])
+        return google.oauth2.credentials.Credentials(
+            token=access_token.token, scopes=[_READ_ONLY_ANALYTICS_SCOPE]
+        )
 else:
+
     def _create_credentials() -> Credentials:
         """Returns Application Default Credentials with read-only scope."""
-        (credentials, _) = google.auth.default(scopes=[_READ_ONLY_ANALYTICS_SCOPE])
+        (credentials, _) = google.auth.default(
+            scopes=[_READ_ONLY_ANALYTICS_SCOPE]
+        )
         return credentials  # type: ignore[no-any-return]
 
 

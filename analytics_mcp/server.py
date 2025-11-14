@@ -15,6 +15,7 @@
 # limitations under the License.
 
 """Entry point for the Google Analytics MCP server."""
+
 from analytics_mcp.coordinator import mcp
 from analytics_mcp.settings import ServerSettings
 

@@ -49,7 +49,13 @@ class FastMcpSettings(BaseFastMcpSettings):
     dependencies: list[str] = Field(default_factory=list)
     """A list of dependencies to install in the server environment."""
 
-    lifespan: Callable[[FastMCP[LifespanResultT]], AbstractAsyncContextManager[LifespanResultT]] | None = None
+    lifespan: (
+        Callable[
+            [FastMCP[LifespanResultT]],
+            AbstractAsyncContextManager[LifespanResultT],
+        ]
+        | None
+    ) = None
     """A async context manager that will be called when the server is started."""
 
     auth: AuthSettings | None = None
@@ -68,7 +74,4 @@ class ServerSettings(BaseSettings):
     transport: Literal["stdio", "streamable-http", "sse"] = "stdio"
 
 
-__all__ = [
-    "FastMcpSettings",
-    "ServerSettings"
-]
+__all__ = ["FastMcpSettings", "ServerSettings"]

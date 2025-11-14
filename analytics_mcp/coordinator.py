@@ -34,17 +34,21 @@ def _create_mcp_server() -> FastMCP:
     settings = FastMcpSettings()
     token_verifier = None
     if settings.auth is not None:
-        token_verifier = GoogleTokenVerifier(required_scopes=settings.auth.required_scopes)
+        token_verifier = GoogleTokenVerifier(
+            required_scopes=settings.auth.required_scopes
+        )
     settings_dict = settings.model_dump()
     mcp = FastMCP(
         "Google Analytics MCP Server",
         token_verifier=token_verifier,
-        **settings_dict
+        **settings_dict,
     )
     if mcp.settings.auth and mcp.settings.auth.resource_server_url:
         protected_resource_metadata = ProtectedResourceMetadata(
             resource=mcp.settings.auth.resource_server_url,
-            authorization_servers=[mcp.settings.auth.issuer_url] if mcp.settings.auth.issuer_url else [],
+            authorization_servers=[mcp.settings.auth.issuer_url]
+            if mcp.settings.auth.issuer_url
+            else [],
             scopes_supported=mcp.settings.auth.required_scopes,
         )
 
