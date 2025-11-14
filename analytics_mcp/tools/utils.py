@@ -20,7 +20,7 @@ from typing import Any
 import google.auth
 import google.oauth2.credentials
 import proto
-from google.analytics import admin_v1beta, data_v1beta
+from google.analytics import admin_v1alpha, admin_v1beta, data_v1beta
 from google.api_core.gapic_v1.client_info import ClientInfo
 from google.auth.credentials import Credentials
 from mcp.server.auth.middleware.auth_context import get_access_token
@@ -77,6 +77,17 @@ def create_data_api_client() -> data_v1beta.BetaAnalyticsDataAsyncClient:
     Uses Application Default Credentials with read-only scope.
     """
     return data_v1beta.BetaAnalyticsDataAsyncClient(
+        client_info=_CLIENT_INFO, credentials=_create_credentials()
+    )
+
+
+def create_admin_alpha_api_client() -> (
+    admin_v1alpha.AnalyticsAdminServiceAsyncClient
+):
+    """Returns a properly configured Google Analytics Admin API (alpha) async client.
+    Uses Application Default Credentials with read-only scope.
+    """
+    return admin_v1alpha.AnalyticsAdminServiceAsyncClient(
         client_info=_CLIENT_INFO, credentials=_create_credentials()
     )
 
