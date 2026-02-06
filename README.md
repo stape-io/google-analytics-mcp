@@ -12,12 +12,8 @@ Replace the content with the following configuration. Once you restart Claude De
 {
   "mcpServers": {
     "ga4-mcp-server": {
-     "command": "npx",
-      "args": [
-        "-y",
-        "mcp-remote",
-        "https://mcp-ga.stape.ai/mcp"
-      ]
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://mcp-ga.stape.ai/mcp"]
     }
   }
 }
@@ -29,6 +25,7 @@ Replace the content with the following configuration. Once you restart Claude De
 
 Some MCP clients (like Cursor AI) have a 60-characterlimit for the combined MCP server name + tool namelength. If you use a longer server name in yourconfiguration (e.g.,`ga4-mcp-server-your-additional-long-name`), some toolsmay be filtered out.
 To avoid this issue:
+
 - Use shorter server names in your MCP configuration (eg., `ga4-mcp-server`)
 
 **Clearing MCP Cache**
@@ -46,4 +43,4 @@ Then restarting your MCP client.
 
 ## Useful Resources
 
-Step-by-step guide on how to configure Google Analytics MCP Server: https://stape.io/blog/mcp-server-for-google-analytics
+- [Step-by-step guide on how to configure Google Analytics MCP Server](https://stape.io/blog/mcp-server-for-google-analytics)
