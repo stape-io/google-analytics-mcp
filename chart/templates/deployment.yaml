@@ -26,7 +26,7 @@ spec:
               value: "0.0.0.0"
             - name: FASTMCP_LOG_LEVEL
               value: "INFO"
-            - name: FASTMCP_TRANSPORT
+            - name: SERVER_TRANSPORT
               value: "streamable-http"
             - name: FASTMCP_AUTH__ISSUER_URL
               value: "https://mcp-auth.{{ .Values.domain }}"
