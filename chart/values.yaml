@@ -1,9 +1,11 @@
 image:
-  repository: "europe-west1-docker.pkg.dev/stape-development/stape"
-  name: "mcp-ga"
+  repository: "example.com/example"
+  name: "app"
   tag: "latest"
 
 host: "example.com"
+auth:
+  issuerHost: "auth.example.com"
 
 resources:
   requests:

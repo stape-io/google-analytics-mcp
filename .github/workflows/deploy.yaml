@@ -5,9 +5,6 @@ run-name: Deploy to 'dev'
 on:
   workflow_dispatch:
 
-env:
-  NAME: mcp-ga
-
 permissions:
   contents: read
   id-token: write
@@ -21,9 +18,7 @@ jobs:
     name: Build Docker Image and Push to GAR
     needs: generate-image-tag
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
+    permissions: write-all
     env:
       REGISTRY: europe-west1-docker.pkg.dev
       REPOSITORY: stape-development/stape
@@ -64,36 +59,43 @@ jobs:
             github_run_id=${{ github.run_id }}
             github_run_attempt=${{ github.run_attempt }}
 
-  deploy-to-kubernetes:
-    name: Deploy to 'dev'
+  update-argocd:
+    name: Update ArgoCD config
     needs:
       - generate-image-tag
       - build-and-push-image
     runs-on: ubuntu-latest
+    permissions: write-all
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - id: auth
-        name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v2
+      - name: Set env.BRANCH_NAME
+        run: |
+          echo "BRANCH_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+
+      - name: Update Image Tag in values-dev.yaml
+        uses: fjogeleit/yaml-update-action@main
         with:
-          workload_identity_provider: projects/664050025753/locations/global/workloadIdentityPools/github/providers/stape-io
-          service_account: github-actions@stape-development.iam.gserviceaccount.com
-          token_format: access_token
+          branch: ${{ env.BRANCH_NAME }}
+          changes: |
+            {
+              "chart/values-dev.yaml": {
+                "image.tag": "${{ needs.generate-image-tag.outputs.image_tag }}"
+              }
+            }
+          message: Updated image.tag in values-dev.yaml
+          quotingType: '"'
+          token: ${{ github.token }}
 
-      - name: Get GKE credentials
-        uses: google-github-actions/get-gke-credentials@v2
+      - name: Set updated short SHA
+        run: |
+          git fetch origin "${BRANCH_NAME}" --depth=1
+          echo "UPD_SHA_SHORT=$(git rev-parse --short "origin/${BRANCH_NAME}")" >> $GITHUB_ENV
+
+      - name: Push Tag
+        uses: thejeff77/action-push-tag@v1.0.0
         with:
-          project_id: stape-development
-          cluster_name: ${{ secrets.GKE_CLUSTER_DEV }}
-          location: ${{ secrets.GKE_LOCATION_DEV }}
-
-      - name: Setup helm
-        uses: azure/setup-helm@v4.3.0
-
-      - name: Update Image Tag
-        run: sed -i "s/latest/${{ needs.generate-image-tag.outputs.image_tag }}/g" chart/values-dev.yaml
-
-      - name: Upgrade Helm Chart
-        run: helm upgrade --install --namespace ${{ env.NAME }}-dev --create-namespace ${{ env.NAME }}-dev chart/ --values chart/values-dev.yaml --wait
+          tag: iris-gcp
+          ref: ${{ env.UPD_SHA_SHORT }}
+          force: true

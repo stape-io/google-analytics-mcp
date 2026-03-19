@@ -8,9 +8,6 @@ on:
     - main
   workflow_dispatch:
 
-env:
-  NAME: mcp-ga
-
 permissions:
   contents: read
   id-token: write
@@ -22,11 +19,10 @@ jobs:
 
   build-and-push-image:
     name: Build Docker Image and Push to GAR
+    if: ${{ github.actor != 'stape-releaser[bot]' }}
     needs: generate-image-tag
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
+    permissions: write-all
     env:
       REGISTRY: europe-west1-docker.pkg.dev
       REPOSITORY: stape-production/stape
@@ -67,36 +63,35 @@ jobs:
             github_run_id=${{ github.run_id }}
             github_run_attempt=${{ github.run_attempt }}
 
-  deploy-to-kubernetes:
-    name: Deploy to 'prod'
+  update-argocd:
+    name: Update ArgoCD config
+    if: ${{ github.actor != 'stape-releaser[bot]' }}
     needs:
       - generate-image-tag
       - build-and-push-image
     runs-on: ubuntu-latest
+    permissions: write-all
     steps:
+      - name: Create Releaser GitHub App Token
+        uses: actions/create-github-app-token@v1
+        id: create-releaser-github-app-token
+        with:
+          app-id: ${{ secrets.RELEASER_APP_ID }}
+          private-key: ${{ secrets.RELEASER_APP_KEY }}
+
       - name: Checkout
         uses: actions/checkout@v4
 
-      - id: auth
-        name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v2
+      - name: Update Image Tag in values-prod.yaml
+        uses: fjogeleit/yaml-update-action@main
         with:
-          workload_identity_provider: projects/207001532273/locations/global/workloadIdentityPools/github/providers/stape-io
-          service_account: github-actions@stape-production.iam.gserviceaccount.com
-          token_format: access_token
-
-      - name: Get GKE credentials
-        uses: google-github-actions/get-gke-credentials@v2
-        with:
-          project_id: ${{ secrets.PROJECT_ID }}
-          cluster_name: ${{ secrets.GKE_CLUSTER }}
-          location: ${{ secrets.GKE_LOCATION }}
-
-      - name: Setup helm
-        uses: azure/setup-helm@v4.3.0
-
-      - name: Update Image Tag
-        run: sed -i "s/latest/${{ needs.generate-image-tag.outputs.image_tag }}/g" chart/values-prod.yaml
-
-      - name: Upgrade Helm Chart
-        run: helm upgrade --install --namespace ${{ env.NAME }} --create-namespace ${{ env.NAME }} chart/ --values chart/values-prod.yaml --wait
+          branch: main
+          changes: |
+            {
+              "chart/values-prod.yaml": {
+                "image.tag": "${{ needs.generate-image-tag.outputs.image_tag }}"
+              }
+            }
+          message: Updated image.tag in values-prod.yaml
+          quotingType: '"'
+          token: ${{ steps.create-releaser-github-app-token.outputs.token }}
