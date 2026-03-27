@@ -36,6 +36,10 @@ spec:
               value: '["https://www.googleapis.com/auth/analytics.readonly"]'
             - name: TOKEN_VERIFIER_URL
               value: "https://{{ .Values.auth.issuerHost }}/auth/exchange/access-token"
+            - name: TOKEN_VERIFIER_METHOD
+              value: "POST"
+            - name: TOKEN_VERIFIER_AUTH
+              value: "bearer"
           resources:
             {{- with .Values.resources }}
             {{- toYaml . | nindent 12 }}
