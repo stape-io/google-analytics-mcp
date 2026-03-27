@@ -35,7 +35,7 @@ spec:
             - name: FASTMCP_AUTH__REQUIRED_SCOPES
               value: '["https://www.googleapis.com/auth/analytics.readonly"]'
             - name: TOKEN_VERIFIER_URL
-              value: "https://{{ .Values.auth.issuerHost }}/auth/exchange/token"
+              value: "https://{{ .Values.auth.issuerHost }}/auth/exchange/access-token"
           resources:
             {{- with .Values.resources }}
             {{- toYaml . | nindent 12 }}
