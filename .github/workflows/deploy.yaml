@@ -63,6 +63,50 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Authenticate to Google Cloud for iris
+        id: auth-iris
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: projects/664050025753/locations/global/workloadIdentityPools/github/providers/stape-io
+          service_account: github-actions@stape-development.iam.gserviceaccount.com
+
+      - name: Get GKE credentials for iris
+        uses: google-github-actions/get-gke-credentials@v2
+        with:
+          project_id: stape-development
+          cluster_name: ${{ secrets.GKE_CLUSTER_DEV }}
+          location: ${{ secrets.GKE_LOCATION_DEV }}
+
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Install 1Password CLI
+        uses: 1password/install-cli-action@v1
+
+      - name: Sync dev secret to iris
+        env:
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+        run: |
+          item_json=$(op item get env.dev --vault google-analytics-mcp-dev --format json)
+
+          printf '%s' "$item_json" | jq -r '
+            [ .fields[]? | select(.label != "notesPlain" and .value != null and .value != "") | "\(.label)=\(.value)" ] as $pairs
+            | if ($pairs | length) > 0 then
+                $pairs[]
+              else
+                (.fields[]? | select(.label == "notesPlain") | .value // empty)
+              end
+          ' > .env.local
+
+          test -s .env.local
+
+          kubectl create namespace mcp-ga-dev --dry-run=client -o yaml | kubectl apply -f -
+          kubectl create secret generic mcp-ga-dev \
+            --namespace mcp-ga-dev \
+            --dry-run=client \
+            --from-env-file=.env.local \
+            -o yaml | kubectl apply -f -
+
       - name: Set env.BRANCH_NAME
         run: |
           echo "BRANCH_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV

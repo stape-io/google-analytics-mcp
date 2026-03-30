@@ -40,6 +40,9 @@ spec:
               value: "POST"
             - name: TOKEN_VERIFIER_AUTH
               value: "bearer"
+          envFrom:
+            - secretRef:
+                name: {{ .Release.Name }}
           resources:
             {{- with .Values.resources }}
             {{- toYaml . | nindent 12 }}
