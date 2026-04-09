@@ -34,6 +34,15 @@ spec:
               value: "https://{{ .Values.host }}/mcp"
             - name: FASTMCP_AUTH__REQUIRED_SCOPES
               value: '["https://www.googleapis.com/auth/analytics.readonly"]'
+            - name: TOKEN_VERIFIER_URL
+              value: "https://{{ .Values.auth.issuerHost }}/auth/exchange/access-token"
+            - name: TOKEN_VERIFIER_METHOD
+              value: "POST"
+            - name: TOKEN_VERIFIER_AUTH
+              value: "bearer"
+          envFrom:
+            - secretRef:
+                name: {{ .Release.Name }}
           resources:
             {{- with .Values.resources }}
             {{- toYaml . | nindent 12 }}

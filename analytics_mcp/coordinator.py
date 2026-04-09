@@ -19,57 +19,101 @@ server using `@mcp.tool` annotations, thereby 'coordinating' the bootstrapping
 of the server.
 """
 
-from mcp.server.auth.handlers.metadata import (
-    ProtectedResourceMetadataHandler,
-)
-from mcp.server.auth.routes import cors_middleware
-from mcp.server.fastmcp import FastMCP
-from mcp.shared.auth import ProtectedResourceMetadata
+from typing import Literal
 
-from analytics_mcp.auth import GoogleTokenVerifier
-from analytics_mcp.settings import FastMcpSettings
+import httpx
+from mcp.server.fastmcp import FastMCP
+from starlette.requests import Request
+from starlette.responses import JSONResponse, Response
+
+from analytics_mcp.auth import BearerAuth, TokenVerifier
+from analytics_mcp.jwt import JWTProvider
+from analytics_mcp.settings import (
+    BasicAuthSettings,
+    BearerAuthSettings,
+    FastMcpSettings,
+    JwtProviderSettings,
+)
+
+
+def _create_jwt_provider() -> JWTProvider:
+    from joserfc import jwk
+
+    settings = JwtProviderSettings()  # type: ignore[call-arg]
+    if not settings.private_keys or settings.algorithm is None:
+        raise ValueError(
+            "JWTProvider cannot be created without private keys and algorithm."
+        )
+
+    private_keys = jwk.KeySet.import_key_set({"keys": settings.private_keys})
+
+    return JWTProvider(
+        private_keys=private_keys,
+        algorithm=settings.algorithm,
+        claims=settings.claims,
+        token_lifetime=settings.token_lifetime,
+    )
+
+
+def _create_bearer_auth() -> httpx.Auth:
+    settings = BearerAuthSettings()
+    if settings.token is not None:
+        token = settings.token.get_secret_value()
+        return BearerAuth(token_provider=lambda: token)
+    else:
+        return BearerAuth(token_provider=_create_jwt_provider())
+
+
+def _create_basic_auth() -> httpx.Auth:
+    settings: BasicAuthSettings = BasicAuthSettings()  # type: ignore[call-arg]
+    return httpx.BasicAuth(
+        username=settings.username,
+        password=settings.password.get_secret_value(),
+    )
+
+
+def _create_auth(type: Literal["bearer", "basic", "none"]) -> httpx.Auth | None:
+    if type == "bearer":
+        return _create_bearer_auth()
+    elif type == "basic":
+        return _create_basic_auth()
+    elif type == "none":
+        return None
+    else:
+        raise ValueError(f"Unsupported auth type: {type}")
+
+
+def _create_token_verifier(
+    required_scopes: list[str] | None = None,
+) -> TokenVerifier:
+    from analytics_mcp.settings import TokenVerifierSettings
+
+    settings = TokenVerifierSettings(required_scopes=required_scopes)
+    return TokenVerifier(
+        auth=_create_auth(settings.auth),
+        url=settings.url,
+        method=settings.method,
+        required_scopes=settings.required_scopes,
+        content_type=settings.content_type,
+    )
 
 
 def _create_mcp_server() -> FastMCP:
     settings = FastMcpSettings()
     token_verifier = None
     if settings.auth is not None:
-        token_verifier = GoogleTokenVerifier(
-            required_scopes=settings.auth.required_scopes
-        )
+        token_verifier = _create_token_verifier(settings.auth.required_scopes)
     settings_dict = settings.model_dump()
     mcp = FastMCP(
         "Google Analytics MCP Server",
         token_verifier=token_verifier,
         **settings_dict,
     )
-    if mcp.settings.auth and mcp.settings.auth.resource_server_url:
-        protected_resource_metadata = ProtectedResourceMetadata(
-            resource=mcp.settings.auth.resource_server_url,
-            authorization_servers=(
-                [mcp.settings.auth.issuer_url]
-                if mcp.settings.auth.issuer_url
-                else []
-            ),
-            scopes_supported=mcp.settings.auth.required_scopes,
-        )
-
-        handler = cors_middleware(
-            ProtectedResourceMetadataHandler(
-                protected_resource_metadata
-            ).handle,
-            ["GET", "OPTIONS"],
-        )
-
-        mcp.custom_route(
-            f"{mcp.settings.sse_path.rstrip('/')}/.well-known/oauth-protected-resource",
-            methods=["GET", "OPTIONS"],
-        )(handler)
-        mcp.custom_route(
-            f"{mcp.settings.streamable_http_path.rstrip('/')}/.well-known/oauth-protected-resource",
-            methods=["GET", "OPTIONS"],
-        )(handler)
     return mcp
 
 
 mcp = _create_mcp_server()
+
+@mcp.custom_route("/healthz", methods=["GET"])
+async def healthz(_request: Request) -> Response:
+    return JSONResponse({"status": "ok"})

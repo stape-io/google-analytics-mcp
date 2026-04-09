@@ -7,6 +7,9 @@ host: "example.com"
 auth:
   issuerHost: "auth.example.com"
 
+secret:
+  create: false
+
 resources:
   requests:
     memory: "128Mi"

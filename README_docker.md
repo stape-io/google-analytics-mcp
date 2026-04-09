@@ -18,7 +18,7 @@ Example env variables:
 FASTMCP_LOG_LEVEL="INFO"
 
 # Transport protocol for the MCP server
-FASTMCP_TRANSPORT="streamable-http"  # can be also stdio or sse (legacy)
+SERVER_TRANSPORT="streamable-http"  # can be also stdio or sse (legacy)
 
 # OAuth issuer URL (your authentication server)
 FASTMCP_AUTH__ISSUER_URL="http://127.0.0.1:9000"
@@ -42,7 +42,7 @@ Or run with environment variables directly:
 ```bash
 docker run \
   -e FASTMCP_LOG_LEVEL="INFO" \
-  -e FASTMCP_TRANSPORT="streamable-http" \
+  -e SERVER_TRANSPORT="streamable-http" \
   -e FASTMCP_AUTH__ISSUER_URL="http://127.0.0.1:9000" \
   -e FASTMCP_AUTH__RESOURCE_SERVER_URL="http://127.0.0.1:8000/mcp" \
   -e FASTMCP_AUTH__REQUIRED_SCOPES='["https://www.googleapis.com/auth/analytics.readonly"]' \
