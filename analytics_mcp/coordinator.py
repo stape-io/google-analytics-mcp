@@ -23,6 +23,8 @@ from typing import Literal
 
 import httpx
 from mcp.server.fastmcp import FastMCP
+from starlette.requests import Request
+from starlette.responses import JSONResponse, Response
 
 from analytics_mcp.auth import BearerAuth, TokenVerifier
 from analytics_mcp.jwt import JWTProvider
@@ -111,3 +113,7 @@ def _create_mcp_server() -> FastMCP:
 
 
 mcp = _create_mcp_server()
+
+@mcp.custom_route("/healthz", methods=["GET"])
+async def healthz(_request: Request) -> Response:
+    return JSONResponse({"status": "ok"})
