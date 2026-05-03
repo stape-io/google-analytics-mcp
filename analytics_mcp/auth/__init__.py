@@ -9,7 +9,7 @@ from pydantic import AnyHttpUrl
 from .google_provider import GoogleProvider
 from .jwt import JWTProvider
 from .settings import (
-    GOOGLE_ADS_MCP_REQUIRED_SCOPES,
+    GOOGLE_ANALYTICS_MCP_REQUIRED_SCOPES,
     GoogleAdsMCPAuthStorageSettings,
     GoogleAdsMCPJwtProviderSettings,
     GoogleAdsMCPOAuthSettings,
@@ -112,7 +112,7 @@ def get_token_verifier(
     required_scopes: list[str] | None = None,
 ) -> TokenVerifier:
     if required_scopes is None:
-        required_scopes = GOOGLE_ADS_MCP_REQUIRED_SCOPES
+        required_scopes = GOOGLE_ANALYTICS_MCP_REQUIRED_SCOPES
     settings = GoogleAdsMCPTokenVerifierSettings()
     return TokenVerifier(
         auth=_get_token_verifier_auth(),
@@ -145,7 +145,7 @@ def get_google_auth_provider(base_url: str) -> GoogleProvider:
         client_id=oauth_settings.client_id,
         client_secret=oauth_settings.client_secret.get_secret_value(),
         base_url=base_url,
-        required_scopes=GOOGLE_ADS_MCP_REQUIRED_SCOPES,
+        required_scopes=GOOGLE_ANALYTICS_MCP_REQUIRED_SCOPES,
         client_storage=client_storage,
         require_authorization_consent=oauth_settings.require_authorization_consent,
         extra_authorize_params=oauth_settings.extra_authorize_params,
@@ -162,7 +162,7 @@ def get_remote_auth_provider(
         token_verifier=get_token_verifier(),
         authorization_servers=[AnyHttpUrl(auth_server_url)],
         base_url=base_url,
-        scopes_supported=GOOGLE_ADS_MCP_REQUIRED_SCOPES,
+        scopes_supported=GOOGLE_ANALYTICS_MCP_REQUIRED_SCOPES,
     )
 
 

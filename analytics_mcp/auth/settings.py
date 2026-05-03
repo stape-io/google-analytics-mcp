@@ -5,29 +5,29 @@ from typing import Any, Literal
 from pydantic import AnyHttpUrl, Field, RedisDsn, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-GOOGLE_ADS_MCP_REQUIRED_SCOPES = [
+GOOGLE_ANALYTICS_MCP_REQUIRED_SCOPES = [
     "openid",
     "https://www.googleapis.com/auth/userinfo.email",
     "https://www.googleapis.com/auth/userinfo.profile",
     "https://www.googleapis.com/auth/analytics.readonly",
 ]
 
-GOOGLE_ADS_MCP_PREFIX = "google_ads_mcp"
+GOOGLE_ANALYTICS_MCP_PREFIX = "google_analytics_mcp"
 
-GOOGLE_ADS_MCP_ENV_FILE = os.environ.get(
-    f"{GOOGLE_ADS_MCP_PREFIX.upper()}_ENV_FILE", ".env"
+GOOGLE_ANALYTICS_MCP_ENV_FILE = os.environ.get(
+    f"{GOOGLE_ANALYTICS_MCP_PREFIX.upper()}_ENV_FILE", ".env"
 )
 
 
 def create_settings_config(path: tuple[str, ...]) -> SettingsConfigDict:
     if path:
         env_path = "_".join(part.lower() for part in path)
-        env_path = f"{GOOGLE_ADS_MCP_PREFIX}_{env_path}"
+        env_path = f"{GOOGLE_ANALYTICS_MCP_PREFIX}_{env_path}"
     else:
-        env_path = GOOGLE_ADS_MCP_PREFIX
+        env_path = GOOGLE_ANALYTICS_MCP_PREFIX
     return SettingsConfigDict(
         env_prefix=env_path + "_",
-        env_file=GOOGLE_ADS_MCP_ENV_FILE,
+        env_file=GOOGLE_ANALYTICS_MCP_ENV_FILE,
         case_sensitive=False,
         env_file_encoding="utf-8",
         extra="ignore",
