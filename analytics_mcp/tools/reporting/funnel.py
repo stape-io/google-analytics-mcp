@@ -138,9 +138,9 @@ async def run_funnel_report(
     steps = []
     for i, step in enumerate(funnel_steps):
         if not isinstance(step, dict):
-            raise ValueError(f"Step {i+1} must be a dictionary")
+            raise ValueError(f"Step {i + 1} must be a dictionary")
 
-        step_name = step.get("name", f"Step {i+1}")
+        step_name = step.get("name", f"Step {i + 1}")
 
         if "filter_expression" in step:
             filter_expr = data_v1alpha.FunnelFilterExpression(
@@ -154,7 +154,7 @@ async def run_funnel_report(
             )
         else:
             raise ValueError(
-                f"Step {i+1} must contain either 'filter_expression' or 'event' key"
+                f"Step {i + 1} must contain either 'filter_expression' or 'event' key"
             )
 
         funnel_step = data_v1alpha.FunnelStep(

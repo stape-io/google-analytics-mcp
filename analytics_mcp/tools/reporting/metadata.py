@@ -319,7 +319,8 @@ def get_metric_filter_hints() -> str:
             expressions=[event_count_gt_10_filter, revenue_between_filter]
         )
     )
-    return f"""Example metric_filter arguments:
+    return (
+        f"""Example metric_filter arguments:
       1. A simple filter:
         {proto_to_json(event_count_gt_10_filter)}
 
@@ -335,7 +336,9 @@ def get_metric_filter_hints() -> str:
       5. An OR group filter:
         {proto_to_json(or_filter)}
 
-    """ + _FILTER_NOTES
+    """
+        + _FILTER_NOTES
+    )
 
 
 def get_dimension_filter_hints() -> str:
@@ -383,7 +386,8 @@ def get_dimension_filter_hints() -> str:
             expressions=[source_medium_filter, event_list_filter]
         )
     )
-    return f"""Example dimension_filter arguments:
+    return (
+        f"""Example dimension_filter arguments:
       1. A simple filter:
         {proto_to_json(begins_with)}
 
@@ -399,7 +403,9 @@ def get_dimension_filter_hints() -> str:
       5. An OR group filter:
         {proto_to_json(or_filter)}
 
-    """ + _FILTER_NOTES
+    """
+        + _FILTER_NOTES
+    )
 
 
 def get_order_bys_hints() -> str:
