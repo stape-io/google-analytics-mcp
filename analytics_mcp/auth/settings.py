@@ -9,7 +9,7 @@ GOOGLE_ADS_MCP_REQUIRED_SCOPES = [
     "openid",
     "https://www.googleapis.com/auth/userinfo.email",
     "https://www.googleapis.com/auth/userinfo.profile",
-    "https://www.googleapis.com/auth/adwords",
+    "https://www.googleapis.com/auth/analytics.readonly",
 ]
 
 GOOGLE_ADS_MCP_PREFIX = "google_ads_mcp"
