@@ -38,7 +38,7 @@ TEST_DEPENDENCIES = [
 ]
 
 
-def _format(session, check=False):
+def _format(session: nox.Session, check: bool = False) -> None:
     """Helper function to run formatters.
 
     Args:
@@ -65,19 +65,19 @@ def _format(session, check=False):
 
 
 @nox.session(venv_backend="none")
-def lint(session):
+def lint(session: nox.Session) -> None:
     """Fails if the code is not formatted correctly."""
     _format(session, check=True)
 
 
 @nox.session(venv_backend="none")
-def format(session):
+def format(session: nox.Session) -> None:
     """Runs the black formatter and applies formatting fixes."""
     _format(session)
 
 
 @nox.session(python=PYTHON_VERSIONS)
-def tests(session):
+def tests(session: nox.Session) -> None:
     session.install(".")
     # modules for testing
     session.install(*TEST_DEPENDENCIES)

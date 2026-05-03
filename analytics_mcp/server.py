@@ -25,7 +25,7 @@ import mcp.server
 import traceback
 
 
-async def run_server_async():
+async def run_server_async() -> None:
     """Runs the MCP server over standard I/O."""
     print("Starting MCP Stdio Server:", coordinator.app.name)
     async with mcp.server.stdio.stdio_server() as (read_stream, write_stream):
@@ -44,14 +44,14 @@ async def run_server_async():
         )
 
 
-def run_server():
+def run_server() -> None:
     """Synchronous wrapper to run the async MCP server."""
     asyncio.run(run_server_async())
 
 
 if __name__ == "__main__":
     try:
-        asyncio.run(run_server())
+        run_server()
     except KeyboardInterrupt:
         print("\nMCP Server (stdio) stopped by user.")
     except Exception:

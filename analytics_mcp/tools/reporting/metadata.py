@@ -25,7 +25,7 @@ from analytics_mcp.tools.utils import (
 from google.analytics import data_v1alpha, data_v1beta
 
 
-def get_date_ranges_hints():
+def get_date_ranges_hints() -> str:
     range_jan = data_v1beta.DateRange(
         start_date="2025-01-01", end_date="2025-01-31", name="Jan2025"
     )
@@ -55,7 +55,7 @@ def get_date_ranges_hints():
     """
 
 
-def get_funnel_steps_hints():
+def get_funnel_steps_hints() -> str:
     """Returns hints and examples for funnel steps configuration."""
     step_first_open = data_v1alpha.FunnelStep(
         name="First open/visit",
@@ -280,7 +280,7 @@ _FILTER_NOTES = """
   """
 
 
-def get_metric_filter_hints():
+def get_metric_filter_hints() -> str:
     """Returns hints and samples for metric_filter arguments."""
     event_count_gt_10_filter = data_v1beta.FilterExpression(
         filter=data_v1beta.Filter(
@@ -338,7 +338,7 @@ def get_metric_filter_hints():
     """ + _FILTER_NOTES
 
 
-def get_dimension_filter_hints():
+def get_dimension_filter_hints() -> str:
     """Returns hints and samples for dimension_filter arguments."""
     begins_with = data_v1beta.FilterExpression(
         filter=data_v1beta.Filter(
@@ -402,7 +402,7 @@ def get_dimension_filter_hints():
     """ + _FILTER_NOTES
 
 
-def get_order_bys_hints():
+def get_order_bys_hints() -> str:
     """Returns hints and examples for order_bys arguments."""
     dimension_alphanumeric_ascending = data_v1beta.OrderBy(
         dimension=data_v1beta.OrderBy.DimensionOrderBy(

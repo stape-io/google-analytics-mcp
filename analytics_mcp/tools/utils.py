@@ -28,7 +28,7 @@ import google.auth
 import proto
 
 
-def _get_package_version_with_fallback():
+def _get_package_version_with_fallback() -> str:
     """Returns the version of the package.
 
     Falls back to 'unknown' if the version can't be resolved.

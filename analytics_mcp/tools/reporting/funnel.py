@@ -14,7 +14,7 @@
 
 """Tools for running funnel reports using the Data API (Alpha)."""
 
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 from analytics_mcp.tools.reporting.metadata import (
     get_date_ranges_hints,
@@ -84,10 +84,10 @@ def _run_funnel_report_description() -> str:
 async def run_funnel_report(
     property_id: int | str,
     funnel_steps: List[Dict[str, Any]],
-    date_ranges: List[Dict[str, str]] = None,
-    funnel_breakdown: Dict[str, str] = None,
-    funnel_next_action: Dict[str, str] = None,
-    segments: List[Dict[str, Any]] = None,
+    date_ranges: Optional[List[Dict[str, str]]] = None,
+    funnel_breakdown: Optional[Dict[str, str]] = None,
+    funnel_next_action: Optional[Dict[str, str]] = None,
+    segments: Optional[List[Dict[str, Any]]] = None,
     return_property_quota: bool = False,
 ) -> Dict[str, Any]:
     """Run a Google Analytics Data API funnel report.
