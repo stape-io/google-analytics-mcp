@@ -183,7 +183,7 @@ async def run_funnel_report(
             )
         )
         if "limit" in funnel_next_action:
-            next_action_config.limit = funnel_next_action["limit"]
+            next_action_config.limit = funnel_next_action["limit"]  # type: ignore[assignment]
         request.funnel_next_action = next_action_config
 
     if segments:

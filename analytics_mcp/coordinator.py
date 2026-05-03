@@ -146,7 +146,7 @@ async def call_mcp_tool(name: str, arguments: dict) -> list[mcp_types.Content]:
         try:
             adk_tool_response = await tool.run_async(
                 args=arguments,
-                tool_context=None,
+                tool_context=None,  # type: ignore[arg-type]
             )
             # Serialize the ADK tool response to JSON for MCP response
             response_text = json.dumps(adk_tool_response, indent=2)
