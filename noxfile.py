@@ -12,9 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 import nox
-import os
-import pathlib
 
 PYTHON_VERSIONS = ["3.10", "3.11", "3.12", "3.13"]
 

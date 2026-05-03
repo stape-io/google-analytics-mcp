@@ -20,34 +20,33 @@ server.
 
 # MCP Server Imports
 import json
-from json import tool
-from mcp import types as mcp_types  # Use alias to avoid conflict
-from mcp.server.lowlevel import Server
 
 # ADK Tool Imports
 from google.adk.tools.function_tool import FunctionTool
 from google.adk.tools.mcp_tool.conversion_utils import adk_to_mcp_tool_type
+from mcp import types as mcp_types  # Use alias to avoid conflict
+from mcp.server.lowlevel import Server
 
 from analytics_mcp.tools.admin.info import (
     get_account_summaries,
-    list_google_ads_links,
     get_property_details,
+    list_google_ads_links,
     list_property_annotations,
 )
 from analytics_mcp.tools.reporting.core import (
-    run_report,
     _run_report_description,
+    run_report,
 )
-from analytics_mcp.tools.reporting.realtime import (
-    run_realtime_report,
-    _run_realtime_report_description,
+from analytics_mcp.tools.reporting.funnel import (
+    _run_funnel_report_description,
+    run_funnel_report,
 )
 from analytics_mcp.tools.reporting.metadata import (
     get_custom_dimensions_and_metrics,
 )
-from analytics_mcp.tools.reporting.funnel import (
-    run_funnel_report,
-    _run_funnel_report_description,
+from analytics_mcp.tools.reporting.realtime import (
+    _run_realtime_report_description,
+    run_realtime_report,
 )
 
 run_report_with_description = FunctionTool(run_report)

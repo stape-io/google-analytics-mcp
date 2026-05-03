@@ -17,12 +17,14 @@
 """Entry point for the Google Analytics MCP server."""
 
 import asyncio
-import analytics_mcp.coordinator as coordinator
+import traceback
+
+import mcp.server
+import mcp.server.stdio
 from mcp.server.lowlevel import NotificationOptions
 from mcp.server.models import InitializationOptions
-import mcp.server.stdio
-import mcp.server
-import traceback
+
+import analytics_mcp.coordinator as coordinator
 
 
 async def run_server_async() -> None:

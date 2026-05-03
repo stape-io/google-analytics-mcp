@@ -14,7 +14,9 @@
 
 """Tools for running core reports using the Data API."""
 
-from typing import Any, Dict, List, Optional
+from typing import Any
+
+from google.analytics import data_v1beta
 
 from analytics_mcp.tools.reporting.metadata import (
     get_date_ranges_hints,
@@ -27,7 +29,6 @@ from analytics_mcp.tools.utils import (
     create_data_api_client,
     proto_to_dict,
 )
-from google.analytics import data_v1beta
 
 
 def _run_report_description() -> str:
@@ -80,17 +81,17 @@ def _run_report_description() -> str:
 
 async def run_report(
     property_id: int | str,
-    date_ranges: List[Dict[str, Any]],
-    dimensions: List[str],
-    metrics: List[str],
-    dimension_filter: Optional[Dict[str, Any]] = None,
-    metric_filter: Optional[Dict[str, Any]] = None,
-    order_bys: Optional[List[Dict[str, Any]]] = None,
-    limit: Optional[int] = None,
-    offset: Optional[int] = None,
-    currency_code: Optional[str] = None,
+    date_ranges: list[dict[str, Any]],
+    dimensions: list[str],
+    metrics: list[str],
+    dimension_filter: dict[str, Any] | None = None,
+    metric_filter: dict[str, Any] | None = None,
+    order_bys: list[dict[str, Any]] | None = None,
+    limit: int | None = None,
+    offset: int | None = None,
+    currency_code: str | None = None,
     return_property_quota: bool = False,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Runs a Google Analytics Data API report.
 
     Note that the reference docs at
