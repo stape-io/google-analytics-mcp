@@ -97,7 +97,7 @@ def sanitize_mcp_schema_properties(node: dict) -> None:
             node["additionalProperties"] = True
 
     # Traverse children
-    for key, child in node.items():
+    for _, child in node.items():
         if isinstance(child, dict):
             sanitize_mcp_schema_properties(child)
         elif isinstance(child, list):
