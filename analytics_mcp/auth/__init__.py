@@ -7,7 +7,6 @@ from key_value.aio.protocols import AsyncKeyValue
 from pydantic import AnyHttpUrl
 
 from .google_provider import GoogleProvider
-
 from .jwt import JWTProvider
 from .settings import (
     GOOGLE_ADS_MCP_REQUIRED_SCOPES,
