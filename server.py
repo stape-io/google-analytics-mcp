@@ -1,6 +1,6 @@
-from analytics_mcp.fastmcp import mcp
+from analytics_mcp.fastmcp_app import mcp
 from starlette.requests import Request
-from starlette.responses import Response, JSONResponse
+from starlette.responses import JSONResponse, Response
 
 app = mcp.http_app(stateless_http=True)
 
