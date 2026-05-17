@@ -98,7 +98,7 @@ def sanitize_mcp_schema_properties(node: dict) -> None:
     additionalProperties is a schema object instead of a boolean.
     """
     if not isinstance(node, dict):
-        return
+        return  # type: ignore[unreachable]
 
     # Check and update the current node
     if "additionalProperties" in node:
