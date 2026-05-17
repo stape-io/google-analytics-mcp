@@ -10,11 +10,11 @@ from .google_provider import GoogleProvider
 from .jwt import JWTProvider
 from .settings import (
     GOOGLE_ANALYTICS_MCP_REQUIRED_SCOPES,
-    GoogleAdsMCPAuthStorageSettings,
-    GoogleAdsMCPJwtProviderSettings,
-    GoogleAdsMCPOAuthSettings,
-    GoogleAdsMCPSettings,
-    GoogleAdsMCPTokenVerifierSettings,
+    GoogleAnalyticsMCPAuthStorageSettings,
+    GoogleAnalyticsMCPJwtProviderSettings,
+    GoogleAnalyticsMCPOAuthSettings,
+    GoogleAnalyticsMCPSettings,
+    GoogleAnalyticsMCPTokenVerifierSettings,
 )
 from .token_verifier import BearerAuth, TokenVerifier
 
@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 def _get_jwt_provider() -> JWTProvider:
     from joserfc import jwk
 
-    settings = GoogleAdsMCPJwtProviderSettings()  # type: ignore[call-arg]
+    settings = GoogleAnalyticsMCPJwtProviderSettings()  # type: ignore[call-arg]
     if not settings.private_keys or settings.algorithm is None:
         raise ValueError(
             "JWTProvider cannot be created without private keys and algorithm."
@@ -41,7 +41,7 @@ def _get_jwt_provider() -> JWTProvider:
 
 
 def _get_bearer_auth() -> httpx.Auth:
-    settings = GoogleAdsMCPTokenVerifierSettings()
+    settings = GoogleAnalyticsMCPTokenVerifierSettings()
     if settings.bearer_token is not None:
         bearer_token = settings.bearer_token.get_secret_value()
         return BearerAuth(token_provider=lambda: bearer_token)
@@ -50,7 +50,7 @@ def _get_bearer_auth() -> httpx.Auth:
 
 
 def _get_basic_auth() -> httpx.Auth:
-    settings = GoogleAdsMCPTokenVerifierSettings()
+    settings = GoogleAnalyticsMCPTokenVerifierSettings()
     if settings.basic_auth_username is None or settings.basic_auth_password is None:
         raise ValueError("Basic auth credentials are not configured.")
     return httpx.BasicAuth(
@@ -61,7 +61,7 @@ def _get_basic_auth() -> httpx.Auth:
 
 def _get_token_verifier_auth(
 ) -> httpx.Auth | None:
-    settings = GoogleAdsMCPTokenVerifierSettings()
+    settings = GoogleAnalyticsMCPTokenVerifierSettings()
     if settings.auth is None:
         return None
     elif settings.auth == "bearer":
@@ -73,7 +73,7 @@ def _get_token_verifier_auth(
 
 
 def _get_auth_provider_storage() -> AsyncKeyValue | None:
-    settings = GoogleAdsMCPAuthStorageSettings()
+    settings = GoogleAnalyticsMCPAuthStorageSettings()
     base_store: AsyncKeyValue | None = None
     if settings.type == "in-memory":
         from key_value.aio.stores.memory import MemoryStore
@@ -113,7 +113,7 @@ def get_token_verifier(
 ) -> TokenVerifier:
     if required_scopes is None:
         required_scopes = GOOGLE_ANALYTICS_MCP_REQUIRED_SCOPES
-    settings = GoogleAdsMCPTokenVerifierSettings()
+    settings = GoogleAnalyticsMCPTokenVerifierSettings()
     return TokenVerifier(
         auth=_get_token_verifier_auth(),
         url=settings.url,
@@ -124,7 +124,7 @@ def get_token_verifier(
 
 
 def get_google_auth_provider(base_url: str) -> GoogleProvider:
-    oauth_settings = GoogleAdsMCPOAuthSettings()  # type: ignore[call-arg]
+    oauth_settings = GoogleAnalyticsMCPOAuthSettings()  # type: ignore[call-arg]
     if not oauth_settings.client_id or not oauth_settings.client_secret:
         raise ValueError(
             "GoogleProvider cannot be created without client ID and client secret."
@@ -167,7 +167,7 @@ def get_remote_auth_provider(
 
 
 def get_auth_provider() -> AuthProvider | None:
-    settings = GoogleAdsMCPSettings()
+    settings = GoogleAnalyticsMCPSettings()
     if settings.auth_provider is None:
         return None
     if settings.auth_provider == "google":

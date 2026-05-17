@@ -1,8 +1,17 @@
+import base64
 import datetime as dt
 import os
 from typing import Any, Literal
 
-from pydantic import AnyHttpUrl, Field, RedisDsn, SecretStr
+from pydantic import (
+    AnyHttpUrl,
+    Field,
+    RedisDsn,
+    SecretBytes,
+    SecretStr,
+    field_validator,
+    model_validator,
+)
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 GOOGLE_ANALYTICS_MCP_REQUIRED_SCOPES = [
@@ -34,7 +43,7 @@ def create_settings_config(path: tuple[str, ...]) -> SettingsConfigDict:
     )
 
 
-class GoogleAdsMCPJwtProviderSettings(BaseSettings):
+class GoogleAnalyticsMCPJwtProviderSettings(BaseSettings):
     model_config = create_settings_config(("auth", "jwt", "provider"))
 
     private_keys: list[dict[str, Any]]
@@ -43,16 +52,22 @@ class GoogleAdsMCPJwtProviderSettings(BaseSettings):
     claims: dict[str, Any] = Field(default_factory=dict)
 
 
-class GoogleAdsMCPAuthStorageSettings(BaseSettings):
+class GoogleAnalyticsMCPAuthStorageSettings(BaseSettings):
     model_config = create_settings_config(("auth", "storage"))
 
     type: Literal["in-memory", "redis", "disk"] | None = None
     redis_url: RedisDsn | None = None
-    encryption_key: SecretStr | None = None
+    encryption_key: SecretBytes | None = None
     disk_directory: str | None = None
 
+    @model_validator(mode="after")
+    def validate_modeled_fields(self) -> "GoogleAnalyticsMCPAuthStorageSettings":
+        if self.type == "redis" and not self.redis_url:
+            raise ValueError("redis_url must be set when type is 'redis'")
+        return self
 
-class GoogleAdsMCPTokenVerifierSettings(BaseSettings):
+
+class GoogleAnalyticsMCPTokenVerifierSettings(BaseSettings):
     model_config = create_settings_config(("auth", "token", "verifier"))
 
     url: str = "https://www.googleapis.com/oauth2/v1/tokeninfo"
@@ -68,18 +83,32 @@ class GoogleAdsMCPTokenVerifierSettings(BaseSettings):
     basic_auth_password: SecretStr | None = None
 
 
-class GoogleAdsMCPOAuthSettings(BaseSettings):
+class GoogleAnalyticsMCPOAuthSettings(BaseSettings):
     model_config = create_settings_config(("oauth",))
 
     client_id: str
     client_secret: SecretStr
     extra_authorize_params: dict[str, Any] | None = None
     require_authorization_consent: bool | Literal["external"] = "external"
-    jwt_signing_key: SecretStr | None = None
+    jwt_signing_key: SecretBytes | None = None
+
+    @field_validator("jwt_signing_key", mode="before")
+    @classmethod
+    def get_jwt_signing_key(cls, v: Any) -> SecretBytes | None:
+        if v is None:
+            return None
+        if isinstance(v, SecretStr):
+            v = v.get_secret_value()
+        if isinstance(v, str):
+            v = base64.urlsafe_b64decode(v)
+        if isinstance(v, bytes):
+            return SecretBytes(v)
+        if isinstance(v, SecretBytes):
+            return v
+        return None
 
 
-
-class GoogleAdsMCPSettings(BaseSettings):
+class GoogleAnalyticsMCPSettings(BaseSettings):
     model_config = create_settings_config(())
     base_url: str = "http://127.0.0.1:8080"
     auth_provider: Literal["google", "remote"] | None = None
