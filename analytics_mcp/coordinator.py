@@ -25,9 +25,7 @@ import sys
 # ADK Tool Imports
 from google.adk.tools.function_tool import FunctionTool
 from google.adk.tools.mcp_tool.conversion_utils import adk_to_mcp_tool_type
-from mcp import (
-    types as mcp_types,  # Use alias to avoid conflict  # Use alias to avoid conflict
-)
+from mcp import types as mcp_types  # Use alias to avoid conflict
 from mcp.server.lowlevel import Server
 
 from analytics_mcp.tools.admin.info import (
@@ -100,7 +98,7 @@ def sanitize_mcp_schema_properties(node: dict) -> None:
     additionalProperties is a schema object instead of a boolean.
     """
     if not isinstance(node, dict):
-        return  # type: ignore[unreachable]
+        return
 
     # Check and update the current node
     if "additionalProperties" in node:
@@ -121,30 +119,30 @@ def sanitize_mcp_schema_properties(node: dict) -> None:
 # Update the inputSchema for tools that do not have parameters.
 # TODO: This is a bug in the ADK and can be removed once it is fixed.
 # https://github.com/google/adk-python/issues/948
-for tl in mcp_tools:
+for tool in mcp_tools:
     # Check if inputSchema is empty
-    if tl.inputSchema == {}:
-        tl.inputSchema = {"type": "object", "properties": {}}
+    if tool.inputSchema == {}:
+        tool.inputSchema = {"type": "object", "properties": {}}
     # Fix union type hints generating spurious "type": "null"
-    for prop in tl.inputSchema.get("properties", {}).values():
+    for prop in tool.inputSchema.get("properties", {}).values():
         if "anyOf" in prop and prop.get("type") == "null":
             del prop["type"]
 
     # Ensure additionalProperties is compatible with all MCP clients
-    sanitize_mcp_schema_properties(tl.inputSchema)
+    sanitize_mcp_schema_properties(tool.inputSchema)
 
     # Explicitly mark required fields for reporting tools to guide the LLM
-    if tl.name == "run_report":
-        tl.inputSchema["required"] = [
+    if tool.name == "run_report":
+        tool.inputSchema["required"] = [
             "property_id",
             "date_ranges",
             "dimensions",
             "metrics",
         ]
-    elif tl.name == "run_realtime_report":
-        tl.inputSchema["required"] = ["property_id", "dimensions", "metrics"]
-    elif tl.name == "run_conversions_report":
-        tl.inputSchema["required"] = [
+    elif tool.name == "run_realtime_report":
+        tool.inputSchema["required"] = ["property_id", "dimensions", "metrics"]
+    elif tool.name == "run_conversions_report":
+        tool.inputSchema["required"] = [
             "property_id",
             "date_ranges",
             "dimensions",

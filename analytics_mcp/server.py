@@ -18,11 +18,6 @@
 
 import asyncio
 import sys
-import analytics_mcp.coordinator as coordinator
-from mcp.server.lowlevel import NotificationOptions
-from mcp.server.models import InitializationOptions
-import mcp.server.stdio
-import mcp.server
 import traceback
 
 import mcp.server

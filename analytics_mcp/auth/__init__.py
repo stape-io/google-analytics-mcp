@@ -51,7 +51,10 @@ def _get_bearer_auth() -> httpx.Auth:
 
 def _get_basic_auth() -> httpx.Auth:
     settings = GoogleAnalyticsMCPTokenVerifierSettings()
-    if settings.basic_auth_username is None or settings.basic_auth_password is None:
+    if (
+        settings.basic_auth_username is None
+        or settings.basic_auth_password is None
+    ):
         raise ValueError("Basic auth credentials are not configured.")
     return httpx.BasicAuth(
         username=settings.basic_auth_username,
@@ -59,8 +62,7 @@ def _get_basic_auth() -> httpx.Auth:
     )
 
 
-def _get_token_verifier_auth(
-) -> httpx.Auth | None:
+def _get_token_verifier_auth() -> httpx.Auth | None:
     settings = GoogleAnalyticsMCPTokenVerifierSettings()
     if settings.auth is None:
         return None
@@ -131,9 +133,7 @@ def get_google_auth_provider(base_url: str) -> GoogleProvider:
         )
     client_storage = _get_auth_provider_storage()
     if client_storage is None:
-        logger.warning(
-            "No storage configured for GoogleProvider."
-        )
+        logger.warning("No storage configured for GoogleProvider.")
     jwt_signing_key = None
     if not oauth_settings.jwt_signing_key:
         logger.warning(

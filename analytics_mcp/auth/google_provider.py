@@ -33,9 +33,7 @@ class GoogleProvider(_SDKGoogleProvider):
     async def _extract_upstream_claims(
         self, idp_tokens: dict[str, Any]
     ) -> dict[str, Any] | None:
-        upstream_claims = (
-            await super()._extract_upstream_claims(idp_tokens)
-        )
+        upstream_claims = await super()._extract_upstream_claims(idp_tokens)
         access_token = idp_tokens.get("access_token")
         if not access_token:
             return upstream_claims
@@ -47,7 +45,9 @@ class GoogleProvider(_SDKGoogleProvider):
             return upstream_claims
         user_profile_data = await get_google_user_info(access_token)
         additional_claims = {
-            k: v for k in USER_PROFILE_KEYS if (v := user_profile_data.get(k)) is not None
+            k: v
+            for k in USER_PROFILE_KEYS
+            if (v := user_profile_data.get(k)) is not None
         }
         if additional_claims:
             upstream_claims = {**(upstream_claims or {}), **additional_claims}

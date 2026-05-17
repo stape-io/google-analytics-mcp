@@ -105,12 +105,12 @@ async def run_conversions_report(
     dimensions: list[str],
     metrics: list[str],
     conversion_spec: dict[str, Any],
-    dimension_filter: dict[str, Any] = None,
-    metric_filter: dict[str, Any] = None,
-    order_bys: list[dict[str, Any]] = None,
-    limit: int = None,
-    offset: int = None,
-    currency_code: str = None,
+    dimension_filter: dict[str, Any] | None = None,
+    metric_filter: dict[str, Any] | None = None,
+    order_bys: list[dict[str, Any]] | None = None,
+    limit: int | None = None,
+    offset: int | None = None,
+    currency_code: str | None = None,
     return_property_quota: bool = False,
 ) -> dict[str, Any]:
     """Runs a Google Analytics Data API conversions report.

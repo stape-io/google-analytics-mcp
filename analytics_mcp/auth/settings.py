@@ -61,7 +61,9 @@ class GoogleAnalyticsMCPAuthStorageSettings(BaseSettings):
     disk_directory: str | None = None
 
     @model_validator(mode="after")
-    def validate_modeled_fields(self) -> "GoogleAnalyticsMCPAuthStorageSettings":
+    def validate_modeled_fields(
+        self,
+    ) -> "GoogleAnalyticsMCPAuthStorageSettings":
         if self.type == "redis" and not self.redis_url:
             raise ValueError("redis_url must be set when type is 'redis'")
         return self
