@@ -21,14 +21,13 @@ server.
 # MCP Server Imports
 import json
 import sys
-from json import tool
-from mcp import types as mcp_types  # Use alias to avoid conflict
-from mcp.server.lowlevel import Server
 
 # ADK Tool Imports
 from google.adk.tools.function_tool import FunctionTool
 from google.adk.tools.mcp_tool.conversion_utils import adk_to_mcp_tool_type
-from mcp import types as mcp_types  # Use alias to avoid conflict
+from mcp import (
+    types as mcp_types,  # Use alias to avoid conflict  # Use alias to avoid conflict
+)
 from mcp.server.lowlevel import Server
 
 from analytics_mcp.tools.admin.info import (
@@ -36,6 +35,10 @@ from analytics_mcp.tools.admin.info import (
     get_property_details,
     list_google_ads_links,
     list_property_annotations,
+)
+from analytics_mcp.tools.reporting.conversions import (
+    _run_conversions_report_description,
+    run_conversions_report,
 )
 from analytics_mcp.tools.reporting.core import (
     _run_report_description,
@@ -51,10 +54,6 @@ from analytics_mcp.tools.reporting.metadata import (
 from analytics_mcp.tools.reporting.realtime import (
     _run_realtime_report_description,
     run_realtime_report,
-)
-from analytics_mcp.tools.reporting.conversions import (
-    run_conversions_report,
-    _run_conversions_report_description,
 )
 
 run_report_with_description = FunctionTool(run_report)
@@ -142,10 +141,10 @@ for tl in mcp_tools:
             "dimensions",
             "metrics",
         ]
-    elif tool.name == "run_realtime_report":
-        tool.inputSchema["required"] = ["property_id", "dimensions", "metrics"]
-    elif tool.name == "run_conversions_report":
-        tool.inputSchema["required"] = [
+    elif tl.name == "run_realtime_report":
+        tl.inputSchema["required"] = ["property_id", "dimensions", "metrics"]
+    elif tl.name == "run_conversions_report":
+        tl.inputSchema["required"] = [
             "property_id",
             "date_ranges",
             "dimensions",

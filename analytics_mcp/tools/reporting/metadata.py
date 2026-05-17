@@ -15,15 +15,16 @@
 """Metadata to provide context and hints for reporting tools."""
 
 import asyncio
-from typing import Any, Dict, List
+from typing import Any
 
+from google.analytics import data_v1alpha, data_v1beta
+
+from analytics_mcp.tools.client import create_data_api_client
 from analytics_mcp.tools.utils import (
     construct_property_rn,
     proto_to_dict,
     proto_to_json,
 )
-from analytics_mcp.tools.client import create_data_api_client
-from google.analytics import data_v1alpha, data_v1beta
 
 
 def get_date_ranges_hints() -> str:
@@ -320,8 +321,7 @@ def get_metric_filter_hints() -> str:
             expressions=[event_count_gt_10_filter, revenue_between_filter]
         )
     )
-    return (
-        f"""Example metric_filter arguments:
+    return f"""Example metric_filter arguments:
       1. A simple filter:
         {proto_to_json(event_count_gt_10_filter)}
 
@@ -337,9 +337,7 @@ def get_metric_filter_hints() -> str:
       5. An OR group filter:
         {proto_to_json(or_filter)}
 
-    """
-        + _FILTER_NOTES
-    )
+    """ + _FILTER_NOTES
 
 
 def get_dimension_filter_hints() -> str:
@@ -387,8 +385,7 @@ def get_dimension_filter_hints() -> str:
             expressions=[source_medium_filter, event_list_filter]
         )
     )
-    return (
-        f"""Example dimension_filter arguments:
+    return f"""Example dimension_filter arguments:
       1. A simple filter:
         {proto_to_json(begins_with)}
 
@@ -404,9 +401,7 @@ def get_dimension_filter_hints() -> str:
       5. An OR group filter:
         {proto_to_json(or_filter)}
 
-    """
-        + _FILTER_NOTES
-    )
+    """ + _FILTER_NOTES
 
 
 def get_order_bys_hints() -> str:
@@ -492,7 +487,7 @@ async def get_custom_dimensions_and_metrics(
 
     """
 
-    def _sync_call():
+    def _sync_call() -> data_v1beta.Metadata:
         return create_data_api_client().get_metadata(
             name=f"{construct_property_rn(property_id)}/metadata"
         )

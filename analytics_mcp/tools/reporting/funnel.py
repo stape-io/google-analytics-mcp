@@ -15,8 +15,11 @@
 """Tools for running funnel reports using the Data API (Alpha)."""
 
 import asyncio
-from typing import Any, Dict, List
+from typing import Any
 
+from google.analytics import data_v1alpha
+
+from analytics_mcp.tools.client import create_data_api_alpha_client
 from analytics_mcp.tools.reporting.metadata import (
     get_date_ranges_hints,
     get_funnel_steps_hints,
@@ -25,8 +28,6 @@ from analytics_mcp.tools.utils import (
     construct_property_rn,
     proto_to_dict,
 )
-from analytics_mcp.tools.client import create_data_api_alpha_client
-from google.analytics import data_v1alpha
 
 
 def _run_funnel_report_description() -> str:
@@ -139,9 +140,9 @@ async def run_funnel_report(
     steps = []
     for i, step in enumerate(funnel_steps):
         if not isinstance(step, dict):
-            raise ValueError(f"Step {i + 1} must be a dictionary")
+            raise ValueError(f"Step {i+1} must be a dictionary")
 
-        step_name = step.get("name", f"Step {i + 1}")
+        step_name = step.get("name", f"Step {i+1}")
 
         if "filter_expression" in step:
             filter_expr = data_v1alpha.FunnelFilterExpression(
@@ -155,7 +156,7 @@ async def run_funnel_report(
             )
         else:
             raise ValueError(
-                f"Step {i + 1} must contain either 'filter_expression' or 'event' key"
+                f"Step {i+1} must contain either 'filter_expression' or 'event' key"
             )
 
         funnel_step = data_v1alpha.FunnelStep(
@@ -184,7 +185,7 @@ async def run_funnel_report(
             )
         )
         if "limit" in funnel_next_action:
-            next_action_config.limit = funnel_next_action["limit"]  # type: ignore[assignment]
+            next_action_config.limit = funnel_next_action["limit"] # type: ignore[assignment]
         request.funnel_next_action = next_action_config
 
     if segments:
@@ -192,7 +193,7 @@ async def run_funnel_report(
             data_v1alpha.Segment(segment) for segment in segments
         ]
 
-    def _sync_call():
+    def _sync_call() -> data_v1alpha.RunFunnelReportResponse:
         return create_data_api_alpha_client().run_funnel_report(request)
 
     response = await asyncio.to_thread(_sync_call)

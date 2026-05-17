@@ -14,90 +14,9 @@
 
 """Common utilities used by the MCP server."""
 
-from importlib import metadata
 from typing import Any
 
 import proto
-import google.auth
-import proto
-from google.analytics import (
-    admin_v1alpha,
-    admin_v1beta,
-    data_v1alpha,
-    data_v1beta,
-)
-from google.api_core.gapic_v1.client_info import ClientInfo
-
-
-def _get_package_version_with_fallback():
-    """Returns the version of the package.
-
-    Falls back to 'unknown' if the version can't be resolved.
-    """
-    try:
-        return metadata.version("analytics-mcp")
-    except:
-        return "unknown"
-
-
-# Client information that adds a custom user agent to all API requests.
-_CLIENT_INFO = ClientInfo(
-    user_agent=f"analytics-mcp/{_get_package_version_with_fallback()}"
-)
-
-# Read-only scope for Analytics Admin API and Analytics Data API.
-_READ_ONLY_ANALYTICS_SCOPE = (
-    "https://www.googleapis.com/auth/analytics.readonly"
-)
-
-
-def _create_credentials() -> google.auth.credentials.Credentials:
-    """Returns Application Default Credentials with read-only scope."""
-    credentials, _ = google.auth.default(scopes=[_READ_ONLY_ANALYTICS_SCOPE])
-    return credentials
-
-
-def create_admin_api_client() -> admin_v1beta.AnalyticsAdminServiceAsyncClient:
-    """Returns a properly configured Google Analytics Admin API async client.
-
-    Uses Application Default Credentials with read-only scope.
-    """
-    return admin_v1beta.AnalyticsAdminServiceAsyncClient(
-        client_info=_CLIENT_INFO, credentials=_create_credentials()
-    )
-
-
-def create_data_api_client() -> data_v1beta.BetaAnalyticsDataAsyncClient:
-    """Returns a properly configured Google Analytics Data API async client.
-
-    Uses Application Default Credentials with read-only scope.
-    """
-    return data_v1beta.BetaAnalyticsDataAsyncClient(
-        client_info=_CLIENT_INFO, credentials=_create_credentials()
-    )
-
-
-def create_admin_alpha_api_client() -> (
-    admin_v1alpha.AnalyticsAdminServiceAsyncClient
-):
-    """Returns a properly configured Google Analytics Admin API (alpha) async client.
-    Uses Application Default Credentials with read-only scope.
-    """
-    return admin_v1alpha.AnalyticsAdminServiceAsyncClient(
-        client_info=_CLIENT_INFO, credentials=_create_credentials()
-    )
-
-
-def create_data_api_alpha_client() -> (
-    data_v1alpha.AlphaAnalyticsDataAsyncClient
-):
-    """Returns a properly configured Google Analytics Data API (Alpha) async client.
-
-    Uses Application Default Credentials with read-only scope.
-    """
-    return data_v1alpha.AlphaAnalyticsDataAsyncClient(
-        client_info=_CLIENT_INFO, credentials=_create_credentials()
-    )
 
 
 def construct_property_rn(property_value: int | str) -> str:
@@ -115,11 +34,9 @@ def construct_property_rn(property_value: int | str) -> str:
                 property_num = int(numeric_part)
     if property_num is None:
         raise ValueError(
-
-                f"Invalid property ID: {property_value}. "
-                "A valid property value is either a number or a string starting "
-                "with 'properties/' and followed by a number."
-
+            f"Invalid property ID: {property_value}. "
+            "A valid property value is either a number or a string starting "
+            "with 'properties/' and followed by a number."
         )
 
     return f"properties/{property_num}"

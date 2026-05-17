@@ -14,17 +14,11 @@
 
 """Tools for running realtime reports using the Data API."""
 
+import asyncio
 from typing import Any
 
 from google.analytics import data_v1beta
 
-import asyncio
-from typing import Any, Dict, List
-
-from analytics_mcp.tools.utils import (
-    construct_property_rn,
-    proto_to_dict,
-)
 from analytics_mcp.tools.client import create_data_api_client
 from analytics_mcp.tools.reporting.metadata import (
     get_date_ranges_hints,
@@ -34,7 +28,6 @@ from analytics_mcp.tools.reporting.metadata import (
 )
 from analytics_mcp.tools.utils import (
     construct_property_rn,
-    create_data_api_client,
     proto_to_dict,
 )
 
@@ -166,7 +159,7 @@ async def run_realtime_report(
     if offset:
         request.offset = offset
 
-    def _sync_call():
+    def _sync_call() -> data_v1beta.RunRealtimeReportResponse:
         return create_data_api_client().run_realtime_report(request)
 
     response = await asyncio.to_thread(_sync_call)

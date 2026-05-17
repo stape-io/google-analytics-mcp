@@ -17,27 +17,29 @@
 import contextlib
 import subprocess
 import threading
+from collections.abc import Generator
 from importlib import metadata
+from typing import Any
 from unittest.mock import patch
 
 import google.auth
 from google.analytics import (
-    admin_v1beta,
-    data_v1beta,
     admin_v1alpha,
+    admin_v1beta,
     data_v1alpha,
+    data_v1beta,
 )
 from google.api_core.gapic_v1.client_info import ClientInfo
 
 
-def _get_package_version_with_fallback():
+def _get_package_version_with_fallback() -> str:
     """Returns the version of the package.
 
     Falls back to 'unknown' if the version can't be resolved.
     """
     try:
         return metadata.version("analytics-mcp")
-    except:
+    except Exception:
         return "unknown"
 
 
@@ -57,7 +59,7 @@ _CREDENTIALS = None
 
 
 @contextlib.contextmanager
-def prevent_stdio_inheritance():
+def prevent_stdio_inheritance() -> Generator[None, None, None]:
     """Prevents child processes from inheriting the parent's stdio handles.
 
     Fixes a deadlock on Windows where `google.auth.default()` spawns `gcloud`
@@ -66,7 +68,7 @@ def prevent_stdio_inheritance():
     """
     original_popen = subprocess.Popen
 
-    def safe_popen(*args, **kwargs):
+    def safe_popen(*args: Any, **kwargs: Any) -> subprocess.Popen:
         if kwargs.get("stdin") is None:
             kwargs["stdin"] = subprocess.DEVNULL
         return original_popen(*args, **kwargs)
@@ -75,7 +77,7 @@ def prevent_stdio_inheritance():
         yield
 
 
-def _get_credentials():
+def _get_credentials() -> google.auth.credentials.Credentials:
     global _CREDENTIALS
     # Expected to be called under _client_lock
     if _CREDENTIALS is None:

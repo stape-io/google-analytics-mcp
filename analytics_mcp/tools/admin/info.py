@@ -15,15 +15,16 @@
 """Tools for gathering Google Analytics account and property information."""
 
 import asyncio
-from typing import Any, Dict, List
+from typing import Any
 
+from google.analytics import admin_v1alpha, admin_v1beta
+
+from analytics_mcp.tools.client import (
+    create_admin_alpha_api_client,
+    create_admin_api_client,
+)
 from analytics_mcp.tools.utils import (
     construct_property_rn,
-    proto_to_dict,
-)
-from analytics_mcp.tools.client import (
-    create_admin_api_client,
-    create_admin_alpha_api_client,
     proto_to_dict,
 )
 
@@ -31,7 +32,7 @@ from analytics_mcp.tools.client import (
 async def get_account_summaries() -> list[dict[str, Any]]:
     """Retrieves information about the user's Google Analytics accounts and properties."""
 
-    def _sync_call():
+    def _sync_call() -> list[dict[str, Any]]:
         summary_pager = create_admin_api_client().list_account_summaries()
         return [proto_to_dict(summary_page) for summary_page in summary_pager]
 
@@ -50,7 +51,7 @@ async def list_google_ads_links(property_id: int | str) -> list[dict[str, Any]]:
         parent=construct_property_rn(property_id)
     )
 
-    def _sync_call():
+    def _sync_call() -> list[dict[str, Any]]:
         links_pager = create_admin_api_client().list_google_ads_links(
             request=request
         )
@@ -70,7 +71,7 @@ async def get_property_details(property_id: int | str) -> dict[str, Any]:
         name=construct_property_rn(property_id)
     )
 
-    def _sync_call():
+    def _sync_call() -> admin_v1beta.Property:
         client = create_admin_api_client()
         return client.get_property(request=request)
 
@@ -96,7 +97,7 @@ async def list_property_annotations(
         parent=construct_property_rn(property_id)
     )
 
-    def _sync_call():
+    def _sync_call() -> list[dict[str, Any]]:
         annotations_pager = (
             create_admin_alpha_api_client().list_reporting_data_annotations(
                 request=request

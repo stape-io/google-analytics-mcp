@@ -15,8 +15,11 @@
 """Tools for running conversions reports using the Data API."""
 
 import asyncio
-from typing import Any, Dict, List
+from typing import Any
 
+from google.analytics import data_v1alpha
+
+from analytics_mcp.tools.client import create_data_api_alpha_client
 from analytics_mcp.tools.reporting.metadata import (
     get_date_ranges_hints,
     get_dimension_filter_hints,
@@ -27,8 +30,6 @@ from analytics_mcp.tools.utils import (
     construct_property_rn,
     proto_to_dict,
 )
-from analytics_mcp.tools.client import create_data_api_alpha_client
-from google.analytics import data_v1alpha
 
 
 def _run_conversions_report_description() -> str:
@@ -100,18 +101,18 @@ def _run_conversions_report_description() -> str:
 
 async def run_conversions_report(
     property_id: int | str,
-    date_ranges: List[Dict[str, Any]],
-    dimensions: List[str],
-    metrics: List[str],
-    conversion_spec: Dict[str, Any],
-    dimension_filter: Dict[str, Any] = None,
-    metric_filter: Dict[str, Any] = None,
-    order_bys: List[Dict[str, Any]] = None,
+    date_ranges: list[dict[str, Any]],
+    dimensions: list[str],
+    metrics: list[str],
+    conversion_spec: dict[str, Any],
+    dimension_filter: dict[str, Any] = None,
+    metric_filter: dict[str, Any] = None,
+    order_bys: list[dict[str, Any]] = None,
     limit: int = None,
     offset: int = None,
     currency_code: str = None,
     return_property_quota: bool = False,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Runs a Google Analytics Data API conversions report.
 
     USE THIS TOOL INSTEAD OF `run_report` WHEN:
@@ -182,7 +183,7 @@ async def run_conversions_report(
     if currency_code:
         request.currency_code = currency_code
 
-    def _sync_call():
+    def _sync_call() -> data_v1alpha.RunReportResponse:
         return create_data_api_alpha_client().run_report(request)
 
     response = await asyncio.to_thread(_sync_call)
