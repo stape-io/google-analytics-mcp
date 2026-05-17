@@ -20,6 +20,10 @@ server.
 
 # MCP Server Imports
 import json
+import sys
+from json import tool
+from mcp import types as mcp_types  # Use alias to avoid conflict
+from mcp.server.lowlevel import Server
 
 # ADK Tool Imports
 from google.adk.tools.function_tool import FunctionTool
@@ -48,6 +52,10 @@ from analytics_mcp.tools.reporting.realtime import (
     _run_realtime_report_description,
     run_realtime_report,
 )
+from analytics_mcp.tools.reporting.conversions import (
+    run_conversions_report,
+    _run_conversions_report_description,
+)
 
 run_report_with_description = FunctionTool(run_report)
 run_report_with_description.description = _run_report_description()
@@ -58,6 +66,10 @@ run_realtime_report_with_description.description = (
 run_funnel_report_with_description = FunctionTool(run_funnel_report)
 run_funnel_report_with_description.description = (
     _run_funnel_report_description()
+)
+run_conversions_report_with_description = FunctionTool(run_conversions_report)
+run_conversions_report_with_description.description = (
+    _run_conversions_report_description()
 )
 
 # Instantiate the ADK tools
@@ -70,6 +82,7 @@ tools = [
     run_report_with_description,
     run_realtime_report_with_description,
     run_funnel_report_with_description,
+    run_conversions_report_with_description,
 ]
 
 tool_map = {t.name: t for t in tools}
@@ -129,8 +142,16 @@ for tl in mcp_tools:
             "dimensions",
             "metrics",
         ]
-    elif tl.name == "run_realtime_report":
-        tl.inputSchema["required"] = ["property_id", "dimensions", "metrics"]
+    elif tool.name == "run_realtime_report":
+        tool.inputSchema["required"] = ["property_id", "dimensions", "metrics"]
+    elif tool.name == "run_conversions_report":
+        tool.inputSchema["required"] = [
+            "property_id",
+            "date_ranges",
+            "dimensions",
+            "metrics",
+            "conversion_spec",
+        ]
 
 
 @app.list_tools()
@@ -153,7 +174,10 @@ async def call_mcp_tool(name: str, arguments: dict) -> list[mcp_types.Content]:
             return [mcp_types.TextContent(type="text", text=response_text)]
 
         except Exception as e:
-            print(f"MCP Server: Error executing ADK tool '{name}': {e}")
+            print(
+                f"MCP Server: Error executing ADK tool '{name}': {e}",
+                file=sys.stderr,
+            )
             # Return an error message in MCP format
             error_text = json.dumps(
                 {"error": f"Failed to execute tool '{name}': {str(e)}"}

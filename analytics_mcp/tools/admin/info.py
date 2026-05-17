@@ -14,14 +14,16 @@
 
 """Tools for gathering Google Analytics account and property information."""
 
-from typing import Any
-
-from google.analytics import admin_v1alpha, admin_v1beta
+import asyncio
+from typing import Any, Dict, List
 
 from analytics_mcp.tools.utils import (
     construct_property_rn,
-    create_admin_alpha_api_client,
+    proto_to_dict,
+)
+from analytics_mcp.tools.client import (
     create_admin_api_client,
+    create_admin_alpha_api_client,
     proto_to_dict,
 )
 
@@ -29,13 +31,11 @@ from analytics_mcp.tools.utils import (
 async def get_account_summaries() -> list[dict[str, Any]]:
     """Retrieves information about the user's Google Analytics accounts and properties."""
 
-    # Uses an async list comprehension so the pager returned by
-    # list_account_summaries retrieves all pages.
-    summary_pager = await create_admin_api_client().list_account_summaries()
-    all_pages = [
-        proto_to_dict(summary_page) async for summary_page in summary_pager
-    ]
-    return all_pages
+    def _sync_call():
+        summary_pager = create_admin_api_client().list_account_summaries()
+        return [proto_to_dict(summary_page) for summary_page in summary_pager]
+
+    return await asyncio.to_thread(_sync_call)
 
 
 async def list_google_ads_links(property_id: int | str) -> list[dict[str, Any]]:
@@ -49,13 +49,14 @@ async def list_google_ads_links(property_id: int | str) -> list[dict[str, Any]]:
     request = admin_v1beta.ListGoogleAdsLinksRequest(
         parent=construct_property_rn(property_id)
     )
-    # Uses an async list comprehension so the pager returned by
-    # list_google_ads_links retrieves all pages.
-    links_pager = await create_admin_api_client().list_google_ads_links(
-        request=request
-    )
-    all_pages = [proto_to_dict(link_page) async for link_page in links_pager]
-    return all_pages
+
+    def _sync_call():
+        links_pager = create_admin_api_client().list_google_ads_links(
+            request=request
+        )
+        return [proto_to_dict(link_page) for link_page in links_pager]
+
+    return await asyncio.to_thread(_sync_call)
 
 
 async def get_property_details(property_id: int | str) -> dict[str, Any]:
@@ -65,11 +66,15 @@ async def get_property_details(property_id: int | str) -> dict[str, Any]:
           - A number
           - A string consisting of 'properties/' followed by a number
     """
-    client = create_admin_api_client()
     request = admin_v1beta.GetPropertyRequest(
         name=construct_property_rn(property_id)
     )
-    response = await client.get_property(request=request)
+
+    def _sync_call():
+        client = create_admin_api_client()
+        return client.get_property(request=request)
+
+    response = await asyncio.to_thread(_sync_call)
     return proto_to_dict(response)
 
 
@@ -90,13 +95,16 @@ async def list_property_annotations(
     request = admin_v1alpha.ListReportingDataAnnotationsRequest(
         parent=construct_property_rn(property_id)
     )
-    annotations_pager = (
-        await create_admin_alpha_api_client().list_reporting_data_annotations(
-            request=request
+
+    def _sync_call():
+        annotations_pager = (
+            create_admin_alpha_api_client().list_reporting_data_annotations(
+                request=request
+            )
         )
-    )
-    all_pages = [
-        proto_to_dict(annotation_page)
-        async for annotation_page in annotations_pager
-    ]
-    return all_pages
+        return [
+            proto_to_dict(annotation_page)
+            for annotation_page in annotations_pager
+        ]
+
+    return await asyncio.to_thread(_sync_call)

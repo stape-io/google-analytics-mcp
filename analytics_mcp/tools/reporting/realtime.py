@@ -18,6 +18,14 @@ from typing import Any
 
 from google.analytics import data_v1beta
 
+import asyncio
+from typing import Any, Dict, List
+
+from analytics_mcp.tools.utils import (
+    construct_property_rn,
+    proto_to_dict,
+)
+from analytics_mcp.tools.client import create_data_api_client
 from analytics_mcp.tools.reporting.metadata import (
     get_date_ranges_hints,
     get_dimension_filter_hints,
@@ -158,5 +166,8 @@ async def run_realtime_report(
     if offset:
         request.offset = offset
 
-    response = await create_data_api_client().run_realtime_report(request)
+    def _sync_call():
+        return create_data_api_client().run_realtime_report(request)
+
+    response = await asyncio.to_thread(_sync_call)
     return proto_to_dict(response)

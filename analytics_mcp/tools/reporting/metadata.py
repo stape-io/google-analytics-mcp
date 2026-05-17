@@ -14,16 +14,16 @@
 
 """Metadata to provide context and hints for reporting tools."""
 
-from typing import Any
-
-from google.analytics import data_v1alpha, data_v1beta
+import asyncio
+from typing import Any, Dict, List
 
 from analytics_mcp.tools.utils import (
     construct_property_rn,
-    create_data_api_client,
     proto_to_dict,
     proto_to_json,
 )
+from analytics_mcp.tools.client import create_data_api_client
+from google.analytics import data_v1alpha, data_v1beta
 
 
 def get_date_ranges_hints() -> str:
@@ -491,9 +491,13 @@ async def get_custom_dimensions_and_metrics(
           - A string consisting of 'properties/' followed by a number
 
     """
-    metadata = await create_data_api_client().get_metadata(
-        name=f"{construct_property_rn(property_id)}/metadata"
-    )
+
+    def _sync_call():
+        return create_data_api_client().get_metadata(
+            name=f"{construct_property_rn(property_id)}/metadata"
+        )
+
+    metadata = await asyncio.to_thread(_sync_call)
     custom_metrics = [
         proto_to_dict(metric)
         for metric in metadata.metrics

@@ -17,6 +17,7 @@
 from importlib import metadata
 from typing import Any
 
+import proto
 import google.auth
 import proto
 from google.analytics import (
@@ -28,14 +29,14 @@ from google.analytics import (
 from google.api_core.gapic_v1.client_info import ClientInfo
 
 
-def _get_package_version_with_fallback() -> str:
+def _get_package_version_with_fallback():
     """Returns the version of the package.
 
     Falls back to 'unknown' if the version can't be resolved.
     """
     try:
         return metadata.version("analytics-mcp")
-    except Exception:
+    except:
         return "unknown"
 
 
@@ -52,13 +53,6 @@ _READ_ONLY_ANALYTICS_SCOPE = (
 
 def _create_credentials() -> google.auth.credentials.Credentials:
     """Returns Application Default Credentials with read-only scope."""
-    from fastmcp.server.dependencies import get_access_token
-    from google.oauth2.credentials import Credentials
-
-    token_obj = get_access_token()
-    if token_obj and token_obj.token:
-        # Create credentials using the access token provided by FastMCP
-        return Credentials(token=token_obj.token)
     credentials, _ = google.auth.default(scopes=[_READ_ONLY_ANALYTICS_SCOPE])
     return credentials
 

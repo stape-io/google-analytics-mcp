@@ -14,9 +14,8 @@
 
 """Tools for running core reports using the Data API."""
 
-from typing import Any
-
-from google.analytics import data_v1beta
+import asyncio
+from typing import Any, Dict, List
 
 from analytics_mcp.tools.reporting.metadata import (
     get_date_ranges_hints,
@@ -26,9 +25,10 @@ from analytics_mcp.tools.reporting.metadata import (
 )
 from analytics_mcp.tools.utils import (
     construct_property_rn,
-    create_data_api_client,
     proto_to_dict,
 )
+from analytics_mcp.tools.client import create_data_api_client
+from google.analytics import data_v1beta
 
 
 def _run_report_description() -> str:
@@ -168,6 +168,9 @@ async def run_report(
     if currency_code:
         request.currency_code = currency_code
 
-    response = await create_data_api_client().run_report(request)
+    def _sync_call():
+        return create_data_api_client().run_report(request)
+
+    response = await asyncio.to_thread(_sync_call)
 
     return proto_to_dict(response)
