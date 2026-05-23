@@ -6,7 +6,7 @@ host: "your-domain.com"
 baseUrl: "https://your-domain.com"
 
 image:
-  repository: "ghcr.io/stape-io/google-ads-mcp"
+  repository: "ghcr.io/stape-io/google-analytics-mcp"
   tag: "latest"
   pullPolicy: Always
 
@@ -40,7 +40,6 @@ auth:
 secret:
   create: true
   data:
-    developerToken: "your-developer-token"
     # Required when auth.remote.jwtProvider.enabled: true
     jwtProviderPrivateKeys: '[{"crv":"Ed25519","x":"...","d":"...","kty":"OKP","kid":"..."}]'
     # Required when auth.remote.tokenVerifier.bearerTokenEnabled: true

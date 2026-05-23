@@ -1,4 +1,4 @@
-# Default values for google-ads-mcp.
+# Default values for google-analytics-mcp.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -7,7 +7,7 @@ replicaCount: 1
 
 # This sets the container image more information can be found here: https://kubernetes.io/docs/concepts/containers/images/
 image:
-  repository: ghcr.io/stape-io/google-ads-mcp
+  repository: ghcr.io/stape-io/google-analytics-mcp
   # This sets the pull policy for images.
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
@@ -165,7 +165,7 @@ affinity: {}
 topologySpreadConstraints: null
 
 # ---------------------------------------------------------------------------
-# Google Ads MCP configuration
+# Google Analytics MCP configuration
 # ---------------------------------------------------------------------------
 
 # Publicly accessible hostname (used to construct baseUrl when baseUrl is empty)
@@ -174,8 +174,6 @@ host: "example.com"
 # Override the full base URL. Defaults to https://<host>
 baseUrl: ""
 
-# Google Ads manager account (MCC) customer ID. Leave empty to omit.
-loginCustomerId: ""
 
 # MCP server container port (the application listens on this port)
 server:
@@ -234,8 +232,6 @@ secret:
   # Override the secret name. Defaults to the chart fullname.
   name: ""
   data:
-    # Google Ads developer token
-    developerToken: ""
     # Google OAuth client ID
     googleOauthClientId: ""
     # Google OAuth client secret

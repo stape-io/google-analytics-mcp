@@ -2,14 +2,14 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "google-ads-mcp.fullname" . }}
+  name: {{ include "google-analytics-mcp.fullname" . }}
   labels:
-    {{- include "google-ads-mcp.labels" . | nindent 4 }}
+    {{- include "google-analytics-mcp.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "google-ads-mcp.fullname" . }}
+    name: {{ include "google-analytics-mcp.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:

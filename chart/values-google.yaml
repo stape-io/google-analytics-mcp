@@ -6,7 +6,7 @@ host: "your-domain.com"
 baseUrl: "https://your-domain.com"
 
 image:
-  repository: "ghcr.io/stape-io/google-ads-mcp"
+  repository: "ghcr.io/stape-io/google-analytics-mcp"
   tag: "latest"
   pullPolicy: Always
 
@@ -31,7 +31,6 @@ auth:
 secret:
   create: true
   data:
-    developerToken: "your-developer-token"
     googleOauthClientId: "your-client-id.apps.googleusercontent.com"
     googleOauthClientSecret: "your-client-secret"
     googleOauthJwtSigningKey: "your-jwt-signing-key"

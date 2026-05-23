@@ -2,9 +2,9 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ include "google-ads-mcp.fullname" . }}
+  name: {{ include "google-analytics-mcp.fullname" . }}
   labels:
-    {{- include "google-ads-mcp.labels" . | nindent 4 }}
+    {{- include "google-analytics-mcp.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -35,7 +35,7 @@ spec:
             {{- end }}
             backend:
               service:
-                name: {{ include "google-ads-mcp.fullname" $ }}
+                name: {{ include "google-analytics-mcp.fullname" $ }}
                 port:
                   number: {{ $.Values.service.port }}
           {{- end }}

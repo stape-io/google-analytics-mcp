@@ -1,6 +1,6 @@
 # Production overrides — combine with values-google.yaml or values-remote.yaml.
 # Example:
-#   helm upgrade --install google-ads-mcp ./helm-chart/google-ads-mcp \
+#   helm upgrade --install google-analytics-mcp ./chart \
 #     -f values-google.yaml -f values-prod.yaml
 
 # Enable TLS certificate provisioning via cert-manager

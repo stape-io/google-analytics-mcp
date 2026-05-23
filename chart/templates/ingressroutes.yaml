@@ -2,9 +2,9 @@
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
-  name: {{ include "google-ads-mcp.fullname" . }}
+  name: {{ include "google-analytics-mcp.fullname" . }}
   labels:
-    {{- include "google-ads-mcp.labels" . | nindent 4 }}
+    {{- include "google-analytics-mcp.labels" . | nindent 4 }}
   {{- with .Values.ingressRoute.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -17,9 +17,9 @@ spec:
       match: Host(`{{ .Values.host }}`)
       priority: {{ .Values.ingressRoute.priority | default 10 }}
       services:
-        - name: {{ include "google-ads-mcp.fullname" . }}
+        - name: {{ include "google-analytics-mcp.fullname" . }}
           namespace: {{ .Release.Namespace }}
           port: {{ .Values.ingressRoute.servicePort | default .Values.service.port }}
   tls:
-    secretName: {{ include "google-ads-mcp.fullname" . }}-certificate
+    secretName: {{ include "google-analytics-mcp.fullname" . }}-certificate
 {{- end }}
