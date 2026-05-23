@@ -1,0 +1,280 @@
+# Default values for google-ads-mcp.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# This will set the replicaset count more information can be found here: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
+replicaCount: 1
+
+# This sets the container image more information can be found here: https://kubernetes.io/docs/concepts/containers/images/
+image:
+  repository: ghcr.io/stape-io/google-ads-mcp
+  # This sets the pull policy for images.
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+# This is for the secrets for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+imagePullSecrets: []
+# This is to override the chart name.
+nameOverride: ""
+fullnameOverride: ""
+
+# This section builds out the service account more information can be found here: https://kubernetes.io/docs/concepts/security/service-accounts/
+serviceAccount:
+  # Specifies whether a service account should be created.
+  create: true
+  # Automatically mount a ServiceAccount's API credentials?
+  automount: true
+  # Annotations to add to the service account.
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template.
+  name: ""
+
+# This is for setting Kubernetes Annotations to a Pod.
+# For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+podAnnotations: {}
+# This is for setting Kubernetes Labels to a Pod.
+# For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+podLabels: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+# This is for setting up a service more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/
+service:
+  # This sets the service type more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
+  type: ClusterIP
+  # This sets the ports more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#field-spec-ports
+  port: 80
+
+# This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+    # - secretName: chart-example-tls
+    #   hosts:
+    #     - chart-example.local
+
+# -- Expose the service via gateway-api HTTPRoute
+# Requires Gateway API resources and suitable controller installed within the cluster
+# (see: https://gateway-api.sigs.k8s.io/guides/)
+httpRoute:
+  # HTTPRoute enabled.
+  enabled: false
+  # HTTPRoute annotations.
+  annotations: {}
+  # Which Gateways this Route is attached to.
+  parentRefs:
+  - name: gateway
+    sectionName: http
+    # namespace: default
+  # Hostnames matching HTTP header.
+  hostnames:
+  - chart-example.local
+  # List of rules and filters applied.
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /headers
+  #   filters:
+  #   - type: RequestHeaderModifier
+  #     requestHeaderModifier:
+  #       set:
+  #       - name: My-Overwrite-Header
+  #         value: this-is-the-only-value
+  #       remove:
+  #       - User-Agent
+  # - matches:
+  #   - path:
+  #       type: PathPrefix
+  #       value: /echo
+  #     headers:
+  #     - name: version
+  #       value: v2
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+# This is to setup the liveness and readiness probes more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+livenessProbe:
+  httpGet:
+    path: /healthz
+    port: http
+readinessProbe:
+  httpGet:
+    path: /healthz
+    port: http
+
+# This section is for setting up autoscaling more information can be found here: https://kubernetes.io/docs/concepts/workloads/autoscaling/
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+# Additional volumes on the output Deployment definition.
+volumes: []
+  # - name: foo
+  #   secret:
+  #     secretName: mysecret
+  #     optional: false
+
+# Additional volumeMounts on the output Deployment definition.
+volumeMounts: []
+  # - name: foo
+  #   mountPath: "/etc/foo"
+  #   readOnly: true
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+# Topology spread constraints for pod scheduling.
+# If null, a default spread-by-hostname constraint is applied.
+topologySpreadConstraints: null
+
+# ---------------------------------------------------------------------------
+# Google Ads MCP configuration
+# ---------------------------------------------------------------------------
+
+# Publicly accessible hostname (used to construct baseUrl when baseUrl is empty)
+host: "example.com"
+
+# Override the full base URL. Defaults to https://<host>
+baseUrl: ""
+
+# Google Ads manager account (MCC) customer ID. Leave empty to omit.
+loginCustomerId: ""
+
+# MCP server container port (the application listens on this port)
+server:
+  containerPort: 8000
+
+auth:
+  # Auth provider: "google" or "remote"
+  provider: "google"
+
+  google:
+    # Consent screen requirement: "external" or boolean.
+    requireAuthorizationConsent: "external"
+    # Extra parameters forwarded to the authorization endpoint object (key-value pairs). E.g. {"access_type":"offline","prompt":"consent"}
+    extraAuthorizeParams: null
+      # access_type: offline
+      # prompt: consent
+    # Enable custom JWT signing key (stored in secret) - strongly recommended for production deployments
+    jwtSigningKeyEnabled: false
+    storage:
+      enabled: false
+      # Storage backend for OAuth tokens: "in-memory", "redis", or "disk"
+      type: "in-memory"
+      # Directory path when type is "disk"
+      diskDirectory: ""
+      # Enable encryption key for token storage (stored in secret)
+      encryptionKeyEnabled: false
+
+  remote:
+    # URL of the remote auth server
+    serverUrl: ""
+    tokenVerifier:
+      # URL to call for token verification
+      url: ""
+      # HTTP method for token verification request
+      method: "POST"
+      # Content-Type for token verification request
+      contentType: "application/json"
+      # Auth method for verifier: "none", "bearer", or "basic"
+      auth: "none"
+      # Enable bearer token secret (requires auth: bearer)
+      bearerTokenEnabled: false
+    jwtProvider:
+      # Enable JWT provider (issues JWTs to authenticated users)
+      enabled: false
+      # JWT signing algorithm
+      algorithm: "RS256"
+      # JWT token lifetime in seconds
+      tokenLifetime: 3600
+      # JWT claims JSON string (stored in secret when non-empty)
+      claims: ""
+
+secret:
+  # Set to true to create the Secret from values below.
+  # Set to false if you manage the Secret externally.
+  create: false
+  # Override the secret name. Defaults to the chart fullname.
+  name: ""
+  data:
+    # Google Ads developer token
+    developerToken: ""
+    # Google OAuth client ID
+    googleOauthClientId: ""
+    # Google OAuth client secret
+    googleOauthClientSecret: ""
+    # Custom JWT signing key (requires auth.google.jwtSigningKeyEnabled: true)
+    # Must be a base64 random bytes string (e.g. 64 bytes: openssl rand -base64 64)
+    googleOauthJwtSigningKey: ""
+    # Redis URL for token storage (requires auth.google.storage.type: redis)
+    authStorageRedisUrl: ""
+    # Encryption key for token storage (requires auth.google.storage.encryptionKeyEnabled: true)
+    # Must be a base64 random bytes string (e.g. 32 bytes for Fernet: openssl rand -base64 32)
+    authStorageEncryptionKey: ""
+    # Bearer token for remote token verifier
+    tokenVerifierBearerToken: ""
+    # Basic auth credentials for remote token verifier
+    tokenVerifierBasicUsername: ""
+    tokenVerifierBasicPassword: ""
+    # Private keys for JWT provider (JWK format as per RFC7517, JSON-encoded array, more info: https://tools.ietf.org/html/rfc7517#section-4)
+    jwtProviderPrivateKeys: ""
+
+extraEnvFrom:
+  # Names of ConfigMaps to inject as environment variables
+  configMaps: []
+  # Names of Secrets to inject as environment variables
+  secrets: []
+
+# cert-manager Certificate resource
+certificate:
+  enabled: false
+  issuerRef:
+    name: letsencrypt
+    kind: ClusterIssuer
+
+# Traefik IngressRoute resource
+ingressRoute:
+  enabled: false
+  annotations: {}
+  entryPoints:
+    - websecure
+  priority: 10
+  # Port on the Service to route traffic to. Defaults to service.port.
+  servicePort: ""

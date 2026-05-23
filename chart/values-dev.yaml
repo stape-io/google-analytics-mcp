@@ -1,0 +1,12 @@
+certificate:
+  enabled: true
+  issuerRef:
+    name: cloudflare
+    kind: ClusterIssuer
+ingressRoute:
+  enabled: true
+secret:
+  create: false
+image:
+  pullPolicy: IfNotPresent
+  tag: f461bfa-26167032201-1

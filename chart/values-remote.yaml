@@ -1,0 +1,57 @@
+# Example values for remote auth provider deployment
+host: "your-domain.com"
+
+# Base URL of the MCP server visible to OAuth clients.
+# Defaults to https://<host> if not set.
+baseUrl: "https://your-domain.com"
+
+image:
+  repository: "ghcr.io/stape-io/google-ads-mcp"
+  tag: "latest"
+  pullPolicy: Always
+
+auth:
+  provider: "remote"
+
+  # Storage is not required for the remote provider.
+
+  remote:
+    serverUrl: "https://your-auth-server.com"
+
+    tokenVerifier:
+      url: "https://your-auth-server.com/auth/introspect"
+      method: "POST"
+      contentType: "application/json"
+      # Authentication for the introspection call: "bearer" | "basic" | "" (none)
+      auth: "bearer"
+      # Set to true to load the bearer token from the Secret.
+      # Leave false and enable jwtProvider below to use dynamic JWT generation instead.
+      bearerTokenEnabled: false
+
+    # JWT provider: generates short-lived JWTs to authenticate introspection calls.
+    # Used when tokenVerifier.auth: "bearer" and bearerTokenEnabled: false.
+    jwtProvider:
+      enabled: true
+      algorithm: "Ed25519"
+      tokenLifetime: "00:01:00"
+      # Additional JWT claims (JSON string)
+      claims: '{"iss":"mcp-server","aud":"https://your-auth-server.com"}'
+
+secret:
+  create: true
+  data:
+    developerToken: "your-developer-token"
+    # Required when auth.remote.jwtProvider.enabled: true
+    jwtProviderPrivateKeys: '[{"crv":"Ed25519","x":"...","d":"...","kty":"OKP","kid":"..."}]'
+    # Required when auth.remote.tokenVerifier.bearerTokenEnabled: true
+    # tokenVerifierBearerToken: "your-bearer-token"
+    # Required when auth.remote.tokenVerifier.auth: "basic"
+    # tokenVerifierBasicUsername: "username"
+    # tokenVerifierBasicPassword: "password"
+
+resources:
+  requests:
+    memory: "128Mi"
+    cpu: "50m"
+  limits:
+    memory: "256Mi"

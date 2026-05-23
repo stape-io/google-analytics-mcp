@@ -1,0 +1,24 @@
+# Production overrides — combine with values-google.yaml or values-remote.yaml.
+# Example:
+#   helm upgrade --install google-ads-mcp ./helm-chart/google-ads-mcp \
+#     -f values-google.yaml -f values-prod.yaml
+
+# Enable TLS certificate provisioning via cert-manager
+certificate:
+  enabled: true
+  issuerRef:
+    name: cloudflare
+    kind: ClusterIssuer
+
+# Enable Traefik IngressRoute
+ingressRoute:
+  enabled: true
+  entryPoints:
+    - websecure
+  priority: 10
+
+secret:
+  create: false  # Manage the Secret externally
+
+image:
+  pullPolicy: Always
