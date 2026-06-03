@@ -17,4 +17,4 @@ ingressRoute:
   enabled: true
 image:
   repository: europe-west1-docker.pkg.dev/stape-development/stape/mcp-ga
-  tag: eb07772-26884065013-1
+  tag: 84c5163-26886378949-1
