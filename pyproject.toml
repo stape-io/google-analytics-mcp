@@ -48,6 +48,7 @@ google-analytics-mcp = "analytics_mcp.server:run_server"
 
 [project.optional-dependencies]
 dev = ["black", "nox >=2026.2.9, <2027"]
+redis = ["redis[hiredis]>=7.4.0"]
 
 [build-system]
 requires = ["setuptools>=82.0.0", "wheel"]
