@@ -117,7 +117,7 @@ jobs:
       - name: Update Image Tag in values-prod.yaml
         uses: fjogeleit/yaml-update-action@v0.17.0
         with:
-          branch: OPS-2183 # TODO: switch to main
+          branch: main
           changes: |
             {
               "chart/values-prod.yaml": {

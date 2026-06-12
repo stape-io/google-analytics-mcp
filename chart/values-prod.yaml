@@ -21,4 +21,4 @@ ingressRoute:
   enabled: true
 image:
   repository: europe-west1-docker.pkg.dev/stape-production/stape/mcp-ga
-  tag: latest
+  tag: 38c7f40-27405154940-1
