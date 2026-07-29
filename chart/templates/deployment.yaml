@@ -6,209 +6,72 @@ metadata:
     {{- include "google-analytics-mcp.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.replicaCount }}
+  replicas: 1
   {{- end }}
   selector:
     matchLabels:
       {{- include "google-analytics-mcp.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       labels:
         {{- include "google-analytics-mcp.labels" . | nindent 8 }}
-        {{- with .Values.podLabels }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
     spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      serviceAccountName: {{ include "google-analytics-mcp.serviceAccountName" . }}
-      {{- with .Values.podSecurityContext }}
-      securityContext:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+      serviceAccountName: {{ include "google-analytics-mcp.fullname" . }}
       containers:
         - name: {{ .Chart.Name }}
-          {{- with .Values.securityContext }}
-          securityContext:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: {{ .Values.server.containerPort | default 8000 }}
+              containerPort: 8000
               protocol: TCP
           env:
             # MCP server settings
             - name: GOOGLE_ANALYTICS_MCP_BASE_URL
-              value: {{ .Values.baseUrl | default (printf "https://%s" .Values.host) | quote }}
+              value: {{ printf "https://%s" .Values.host | quote }}
             - name: GOOGLE_ANALYTICS_MCP_AUTH_PROVIDER
-              value: {{ .Values.auth.provider | default "google" | quote }}
-
-            {{- if or (not .Values.auth.provider) (eq .Values.auth.provider "google") }}
-            # Google OAuth provider
+              value: "google"
             - name: GOOGLE_ANALYTICS_MCP_OAUTH_CLIENT_ID
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.secret.name | default (include "google-analytics-mcp.fullname" .) }}
+                  name: {{ include "google-analytics-mcp.fullname" . }}
                   key: GOOGLE_ANALYTICS_MCP_OAUTH_CLIENT_ID
             - name: GOOGLE_ANALYTICS_MCP_OAUTH_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.secret.name | default (include "google-analytics-mcp.fullname" .) }}
+                  name: {{ include "google-analytics-mcp.fullname" . }}
                   key: GOOGLE_ANALYTICS_MCP_OAUTH_CLIENT_SECRET
-            {{- with .Values.auth.google.requireAuthorizationConsent }}
             - name: GOOGLE_ANALYTICS_MCP_OAUTH_REQUIRE_AUTHORIZATION_CONSENT
-              value: {{ . | quote }}
-            {{- end }}
-            {{- with .Values.auth.google.extraAuthorizeParams }}
+              value: "external"
             - name: GOOGLE_ANALYTICS_MCP_OAUTH_EXTRA_AUTHORIZE_PARAMS
-              value: {{ . | toJson | quote }}
-            {{- end }}
-            {{- if .Values.auth.google.jwtSigningKeyEnabled }}
+              value: "{\"access_type\":\"offline\"}"
             - name: GOOGLE_ANALYTICS_MCP_OAUTH_JWT_SIGNING_KEY
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.secret.name | default (include "google-analytics-mcp.fullname" .) }}
+                  name: {{ include "google-analytics-mcp.fullname" . }}
                   key: GOOGLE_ANALYTICS_MCP_OAUTH_JWT_SIGNING_KEY
-            {{- end }}
             # Auth storage
-            {{- if .Values.auth.google.storage.enabled }}
             - name: GOOGLE_ANALYTICS_MCP_AUTH_STORAGE_TYPE
-              value: {{ .Values.auth.google.storage.type | default "in-memory" | quote }}
-            {{- if eq .Values.auth.google.storage.type "redis" }}
+              value: "redis"
             - name: GOOGLE_ANALYTICS_MCP_AUTH_STORAGE_REDIS_URL
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.secret.name | default (include "google-analytics-mcp.fullname" .) }}
+                  name: {{ include "google-analytics-mcp.fullname" . }}
                   key: GOOGLE_ANALYTICS_MCP_AUTH_STORAGE_REDIS_URL
-            {{- end }}
-            {{- if and (eq .Values.auth.google.storage.type "disk") .Values.auth.google.storage.diskDirectory }}
-            - name: GOOGLE_ANALYTICS_MCP_AUTH_STORAGE_DISK_DIRECTORY
-              value: {{ .Values.auth.google.storage.diskDirectory | quote }}
-            {{- end }}
-            {{- if .Values.auth.google.storage.encryptionKeyEnabled }}
             - name: GOOGLE_ANALYTICS_MCP_AUTH_STORAGE_ENCRYPTION_KEY
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.secret.name | default (include "google-analytics-mcp.fullname" .) }}
+                  name: {{ include "google-analytics-mcp.fullname" . }}
                   key: GOOGLE_ANALYTICS_MCP_AUTH_STORAGE_ENCRYPTION_KEY
-            {{- end }}
-            {{- end }}
-
-            {{- else if eq .Values.auth.provider "remote" }}
-            # Remote auth provider
-            - name: GOOGLE_ANALYTICS_MCP_AUTH_SERVER_URL
-              value: {{ .Values.auth.remote.serverUrl | quote }}
-            # Token verifier
-            - name: GOOGLE_ANALYTICS_MCP_AUTH_TOKEN_VERIFIER_URL
-              value: {{ .Values.auth.remote.tokenVerifier.url | quote }}
-            {{- with .Values.auth.remote.tokenVerifier.method }}
-            - name: GOOGLE_ANALYTICS_MCP_AUTH_TOKEN_VERIFIER_METHOD
-              value: {{ . | quote }}
-            {{- end }}
-            {{- with .Values.auth.remote.tokenVerifier.contentType }}
-            - name: GOOGLE_ANALYTICS_MCP_AUTH_TOKEN_VERIFIER_CONTENT_TYPE
-              value: {{ . | quote }}
-            {{- end }}
-            {{- with .Values.auth.remote.tokenVerifier.auth }}
-            - name: GOOGLE_ANALYTICS_MCP_AUTH_TOKEN_VERIFIER_AUTH
-              value: {{ . | quote }}
-            {{- end }}
-            {{- if and (eq .Values.auth.remote.tokenVerifier.auth "bearer") .Values.auth.remote.tokenVerifier.bearerTokenEnabled }}
-            - name: GOOGLE_ANALYTICS_MCP_AUTH_TOKEN_VERIFIER_BEARER_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.secret.name | default (include "google-analytics-mcp.fullname" .) }}
-                  key: GOOGLE_ANALYTICS_MCP_AUTH_TOKEN_VERIFIER_BEARER_TOKEN
-            {{- end }}
-            {{- if eq .Values.auth.remote.tokenVerifier.auth "basic" }}
-            - name: GOOGLE_ANALYTICS_MCP_AUTH_TOKEN_VERIFIER_BASIC_AUTH_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.secret.name | default (include "google-analytics-mcp.fullname" .) }}
-                  key: GOOGLE_ANALYTICS_MCP_AUTH_TOKEN_VERIFIER_BASIC_AUTH_USERNAME
-            - name: GOOGLE_ANALYTICS_MCP_AUTH_TOKEN_VERIFIER_BASIC_AUTH_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.secret.name | default (include "google-analytics-mcp.fullname" .) }}
-                  key: GOOGLE_ANALYTICS_MCP_AUTH_TOKEN_VERIFIER_BASIC_AUTH_PASSWORD
-            {{- end }}
-            {{- if .Values.auth.remote.jwtProvider.enabled }}
-            # JWT provider
-            - name: GOOGLE_ANALYTICS_MCP_AUTH_JWT_PROVIDER_PRIVATE_KEYS
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.secret.name | default (include "google-analytics-mcp.fullname" .) }}
-                  key: GOOGLE_ANALYTICS_MCP_AUTH_JWT_PROVIDER_PRIVATE_KEYS
-            - name: GOOGLE_ANALYTICS_MCP_AUTH_JWT_PROVIDER_ALGORITHM
-              value: {{ .Values.auth.remote.jwtProvider.algorithm | quote }}
-            {{- with .Values.auth.remote.jwtProvider.tokenLifetime }}
-            - name: GOOGLE_ANALYTICS_MCP_AUTH_JWT_PROVIDER_TOKEN_LIFETIME
-              value: {{ . | quote }}
-            {{- end }}
-            {{- with .Values.auth.remote.jwtProvider.claims }}
-            - name: GOOGLE_ANALYTICS_MCP_AUTH_JWT_PROVIDER_CLAIMS
-              valueFrom:
-                secretKeyRef:
-                  name: {{ $.Values.secret.name | default (include "google-analytics-mcp.fullname" $) }}
-                  key: GOOGLE_ANALYTICS_MCP_AUTH_JWT_PROVIDER_CLAIMS
-            {{- end }}
-            {{- end }}
-            {{- end }}
-          {{- with .Values.livenessProbe }}
           livenessProbe:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          {{- with .Values.readinessProbe }}
+            httpGet:
+              path: /healthz
+              port: http
           readinessProbe:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          {{- with .Values.resources }}
-          resources:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-          {{- if or .Values.extraEnvFrom.configMaps .Values.extraEnvFrom.secrets }}
-          envFrom:
-            {{- range .Values.extraEnvFrom.configMaps }}
-            - configMapRef:
-                name: {{ . }}
-            {{- end }}
-            {{- range .Values.extraEnvFrom.secrets }}
-            - secretRef:
-                name: {{ . }}
-            {{- end }}
-          {{- end }}
-          {{- with .Values.volumeMounts }}
-          volumeMounts:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
-      {{- with .Values.volumes }}
-      volumes:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- if .Values.topologySpreadConstraints }}
-      topologySpreadConstraints:
-        {{- toYaml .Values.topologySpreadConstraints | nindent 8 }}
-      {{- else }}
+            httpGet:
+              path: /healthz
+              port: http
+          resources: {}
       topologySpreadConstraints:
         - maxSkew: 1
           topologyKey: kubernetes.io/hostname
@@ -216,4 +79,3 @@ spec:
           labelSelector:
             matchLabels:
               {{- include "google-analytics-mcp.selectorLabels" . | nindent 14 }}
-      {{- end }}
