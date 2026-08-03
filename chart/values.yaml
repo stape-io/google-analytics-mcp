@@ -3,6 +3,11 @@ image:
   pullPolicy: IfNotPresent
   tag: ""
 
+resources:
+  requests:
+    cpu: 10m
+    memory: 200Mi
+
 autoscaling:
   enabled: false
 
