@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "google-analytics-mcp.fullname" . }}
+  name: {{ .Release.Name }}
   labels:
     {{- include "google-analytics-mcp.labels" . | nindent 4 }}
 spec:
@@ -16,7 +16,7 @@ spec:
       labels:
         {{- include "google-analytics-mcp.labels" . | nindent 8 }}
     spec:
-      serviceAccountName: {{ include "google-analytics-mcp.fullname" . }}
+      serviceAccountName: {{ .Release.Name }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -34,12 +34,12 @@ spec:
             - name: GOOGLE_ANALYTICS_MCP_OAUTH_CLIENT_ID
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "google-analytics-mcp.fullname" . }}
+                  name: {{ .Release.Name }}
                   key: GOOGLE_ANALYTICS_MCP_OAUTH_CLIENT_ID
             - name: GOOGLE_ANALYTICS_MCP_OAUTH_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "google-analytics-mcp.fullname" . }}
+                  name: {{ .Release.Name }}
                   key: GOOGLE_ANALYTICS_MCP_OAUTH_CLIENT_SECRET
             - name: GOOGLE_ANALYTICS_MCP_OAUTH_REQUIRE_AUTHORIZATION_CONSENT
               value: "external"
@@ -48,7 +48,7 @@ spec:
             - name: GOOGLE_ANALYTICS_MCP_OAUTH_JWT_SIGNING_KEY
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "google-analytics-mcp.fullname" . }}
+                  name: {{ .Release.Name }}
                   key: GOOGLE_ANALYTICS_MCP_OAUTH_JWT_SIGNING_KEY
             # Auth storage
             - name: GOOGLE_ANALYTICS_MCP_AUTH_STORAGE_TYPE
@@ -56,12 +56,12 @@ spec:
             - name: GOOGLE_ANALYTICS_MCP_AUTH_STORAGE_REDIS_URL
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "google-analytics-mcp.fullname" . }}
+                  name: {{ .Release.Name }}
                   key: GOOGLE_ANALYTICS_MCP_AUTH_STORAGE_REDIS_URL
             - name: GOOGLE_ANALYTICS_MCP_AUTH_STORAGE_ENCRYPTION_KEY
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "google-analytics-mcp.fullname" . }}
+                  name: {{ .Release.Name }}
                   key: GOOGLE_ANALYTICS_MCP_AUTH_STORAGE_ENCRYPTION_KEY
           livenessProbe:
             httpGet:

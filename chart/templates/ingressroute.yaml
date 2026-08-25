@@ -1,7 +1,7 @@
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
-  name: {{ include "google-analytics-mcp.fullname" . }}
+  name: {{ .Release.Name }}
   labels:
     {{- include "google-analytics-mcp.labels" . | nindent 4 }}
 spec:
@@ -12,8 +12,8 @@ spec:
       match: Host(`{{ .Values.host }}`)
       priority: 10
       services:
-        - name: {{ include "google-analytics-mcp.fullname" . }}
+        - name: {{ .Release.Name }}
           namespace: {{ .Release.Namespace }}
           port: 80
   tls:
-    secretName: {{ include "google-analytics-mcp.fullname" . }}-certificate
+    secretName: {{ .Release.Name }}-certificate
