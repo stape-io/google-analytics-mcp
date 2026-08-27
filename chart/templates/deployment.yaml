@@ -16,7 +16,6 @@ spec:
       labels:
         {{- include "google-analytics-mcp.labels" . | nindent 8 }}
     spec:
-      serviceAccountName: {{ .Release.Name }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
@@ -71,12 +70,8 @@ spec:
             httpGet:
               path: /healthz
               port: http
-          {{- with .Values.resources }}
           resources:
-            {{- toYaml . | nindent 12 }}
-          {{- else }}
-          resources: {}
-          {{- end }}
+            {{- toYaml .Values.resources | nindent 12 }}
       topologySpreadConstraints:
         - maxSkew: 1
           topologyKey: kubernetes.io/hostname
