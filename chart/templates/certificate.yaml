@@ -1,16 +1,14 @@
-{{- if .Values.certificate.enabled }}
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: {{ include "google-analytics-mcp.fullname" . }}
+  name: {{ .Release.Name }}
   labels:
     {{- include "google-analytics-mcp.labels" . | nindent 4 }}
 spec:
   commonName: {{ .Values.host | quote }}
-  secretName: {{ include "google-analytics-mcp.fullname" . }}-certificate
+  secretName: {{ .Release.Name }}-certificate
   dnsNames:
     - {{ .Values.host | quote }}
   issuerRef:
-    name: {{ .Values.certificate.issuerRef.name }}
-    kind: {{ .Values.certificate.issuerRef.kind }}
-{{- end }}
+    name: cloudflare
+    kind: ClusterIssuer

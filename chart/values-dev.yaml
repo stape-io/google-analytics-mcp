@@ -1,20 +1,4 @@
-auth:
-  google:
-    extraAuthorizeParams:
-      access_type: offline
-    jwtSigningKeyEnabled: true
-    storage:
-      enabled: true
-      type: redis
-      encryptionKeyEnabled: true
-certificate:
-  enabled: true
-  issuerRef:
-    name: cloudflare
-    kind: ClusterIssuer
 host: mcp-google-analytics.stape.dev
-ingressRoute:
-  enabled: true
 image:
   repository: europe-west1-docker.pkg.dev/stape-development/stape/mcp-ga
   tag: eb07772-26884065013-1
