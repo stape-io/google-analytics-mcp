@@ -20,6 +20,7 @@ An interface to the Google Analytics 4 Admin and Data APIs over MCP, in two flav
     - [Other MCP clients](#other-mcp-clients)
     - [Troubleshooting](#troubleshooting)
   - [Local Development](#local-development)
+  - [Useful resources](#useful-resources)
   - [Open Source](#open-source)
 
 ## Available tools
@@ -390,8 +391,10 @@ nox -s tests    # unit tests across supported Python versions
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the CLA and pull request process.
 
+## Useful resources
+
+- [Step-by-step guide: MCP Server for Google Analytics](https://stape.io/blog/mcp-server-for-google-analytics)
+
 ## Open Source
 
 The **MCP Server for Google Analytics 4** is a fork of [Google's official `google-analytics-mcp`](https://github.com/googleanalytics/google-analytics-mcp), maintained by [Stape Team](https://stape.io/) under the Apache 2.0 license.
-
-Learn more: [Step-by-step guide: MCP Server for Google Analytics](https://stape.io/blog/mcp-server-for-google-analytics)
