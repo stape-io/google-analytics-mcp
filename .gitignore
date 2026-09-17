@@ -68,3 +68,4 @@ pylintrc.test
 
 .agents/skills
 .env
+.agents/
