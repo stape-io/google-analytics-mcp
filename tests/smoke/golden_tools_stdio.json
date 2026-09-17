@@ -28,7 +28,8 @@
         ],
         "type": "object",
         "x-fastmcp-wrap-result": true
-      }
+      },
+      "title": "Get Account Summaries"
     },
     {
       "_meta": {
@@ -67,7 +68,8 @@
           "type": "array"
         },
         "type": "object"
-      }
+      },
+      "title": "Get Custom Dimensions And Metrics"
     },
     {
       "_meta": {
@@ -99,7 +101,8 @@
       "outputSchema": {
         "additionalProperties": true,
         "type": "object"
-      }
+      },
+      "title": "Get Property Details"
     },
     {
       "_meta": {
@@ -144,7 +147,8 @@
         ],
         "type": "object",
         "x-fastmcp-wrap-result": true
-      }
+      },
+      "title": "List Google Ads Links"
     },
     {
       "_meta": {
@@ -189,7 +193,8 @@
         ],
         "type": "object",
         "x-fastmcp-wrap-result": true
-      }
+      },
+      "title": "List Property Annotations"
     },
     {
       "_meta": {
@@ -336,7 +341,8 @@
       "outputSchema": {
         "additionalProperties": true,
         "type": "object"
-      }
+      },
+      "title": "Run Conversions Report"
     },
     {
       "_meta": {
@@ -447,7 +453,8 @@
       "outputSchema": {
         "additionalProperties": true,
         "type": "object"
-      }
+      },
+      "title": "Run Funnel Report"
     },
     {
       "_meta": {
@@ -567,7 +574,8 @@
       "outputSchema": {
         "additionalProperties": true,
         "type": "object"
-      }
+      },
+      "title": "Run Realtime Report"
     },
     {
       "_meta": {
@@ -708,7 +716,8 @@
       "outputSchema": {
         "additionalProperties": true,
         "type": "object"
-      }
+      },
+      "title": "Run Report"
     }
   ]
 }

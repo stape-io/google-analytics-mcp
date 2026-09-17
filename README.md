@@ -387,6 +387,8 @@ Then run `gemini --debug` so Gemini prints debug output as it processes prompts.
 nox -s format   # applies black formatting (80-char line width)
 nox -s lint     # checks formatting only, fails on drift
 nox -s tests    # unit tests across supported Python versions
+ruff check .    # lint
+mypy            # type check
 ```
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the CLA and pull request process.

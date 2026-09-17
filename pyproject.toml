@@ -11,9 +11,20 @@ dependencies = [
     "google-analytics-data==0.22.0",
     "google-analytics-admin==0.29.0",
     "google-auth~=2.40",
-    "mcp>=1.24.0",
+    "mcp>=2.2.0,<3",
+    # Direct pin required: as of mcp 2.x / fastmcp 4.x the SDK uses httpx2, so
+    # httpx v1 is no longer transitive even though analytics_mcp/auth still
+    # uses it directly (google_provider.py, token_verifier.py).
     "httpx>=0.28.1",
-    "fastmcp>=3.2.4,<4",
+    "fastmcp>=4.0.3,<5",
+    # Previously transitive-only, arriving through fastmcp's own extras.
+    # Declared explicitly so a future fastmcp major version can't drop one
+    # out from under this repo with no warning.
+    "pydantic>=2.12",
+    "pydantic-settings>=2.0",
+    "py-key-value-aio>=0.4.4,<0.5.0",
+    "joserfc>=1.6.5",
+    "starlette>=0.52.1",
 ]
 keywords = ["google analytics", "analytics", "mcp", "ga4"]
 classifiers = [
@@ -46,7 +57,7 @@ analytics-mcp = "analytics_mcp.server:run_server"
 google-analytics-mcp = "analytics_mcp.server:run_server"
 
 [project.optional-dependencies]
-dev = ["black==26.5.1", "nox >=2026.2.9, <2027", "uv>=0.8"]
+dev = ["black==26.5.1", "nox >=2026.2.9, <2027", "ruff", "mypy"]
 redis = ["redis[hiredis]>=7.4.0"]
 
 [build-system]
