@@ -14,53 +14,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Entry point for the Google Analytics MCP server."""
+"""Entry point for the Google Analytics MCP server over stdio."""
 
-import asyncio
-import sys
-import traceback
-
-import mcp.server
-import mcp.server.stdio
-from mcp.server.lowlevel import NotificationOptions
-from mcp.server.models import InitializationOptions
-
-import analytics_mcp.coordinator as coordinator
-
-
-async def run_server_async() -> None:
-    """Runs the MCP server over standard I/O."""
-    print("Starting MCP Stdio Server:", coordinator.app.name, file=sys.stderr)
-    async with mcp.server.stdio.stdio_server() as (read_stream, write_stream):
-        await coordinator.app.run(
-            read_stream,
-            write_stream,
-            InitializationOptions(
-                server_name=coordinator.app.name,  # Use the server name defined above
-                server_version="1.0.0",
-                capabilities=coordinator.app.get_capabilities(
-                    # Define server capabilities - consult MCP docs for options
-                    notification_options=NotificationOptions(),
-                    experimental_capabilities={},
-                ),
-            ),
-        )
+from analytics_mcp.fastmcp_app import mcp
 
 
 def run_server() -> None:
-    """Synchronous wrapper to run the async MCP server."""
-    asyncio.run(run_server_async())
+    """Runs the MCP server over standard I/O."""
+    # show_banner=False: the banner calls PyPI for an update check on every
+    # client launch.
+    mcp.run(show_banner=False)
 
 
 if __name__ == "__main__":
-    try:
-        run_server()
-    except KeyboardInterrupt:
-        print("\nMCP Server (stdio) stopped by user.", file=sys.stderr)
-    except Exception:
-        import traceback
-
-        print("MCP Server (stdio) encountered an error:", file=sys.stderr)
-        traceback.print_exc()
-    finally:
-        print("MCP Server (stdio) process exiting.", file=sys.stderr)
+    run_server()
