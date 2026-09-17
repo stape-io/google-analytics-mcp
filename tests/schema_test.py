@@ -90,7 +90,10 @@ def fastmcp_tools() -> dict[str, dict]:
 
 def adk_tools() -> dict[str, dict]:
     """name -> tool dict on the pre-upgrade stdio path. Retires with coordinator."""
-    import analytics_mcp.coordinator as coordinator
+    # Deliberately imports a module this same migration deletes: only ever
+    # called from tests gated behind `skipUnless(HAS_COORDINATOR, ...)`, so
+    # it's dead code post-upgrade, not a live import mypy can resolve.
+    import analytics_mcp.coordinator as coordinator  # type: ignore[import-not-found]
 
     return {
         t.name: t.model_dump(mode="json", exclude_none=True)
