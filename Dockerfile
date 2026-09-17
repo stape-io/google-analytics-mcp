@@ -9,11 +9,11 @@ WORKDIR /app
 
 COPY pyproject.toml uv.lock ./
 
-RUN uv sync --all-extras --no-dev --no-install-project
+RUN uv sync --extra redis --no-dev --no-install-project
 
 COPY . .
 
-RUN uv sync --all-extras --no-dev
+RUN uv sync --extra redis --no-dev
 
 EXPOSE 8000
 

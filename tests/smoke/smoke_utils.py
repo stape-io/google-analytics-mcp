@@ -130,7 +130,10 @@ def get_http_tools_list() -> dict[str, Any]:
     async def _list() -> list[dict[str, Any]]:
         async with Client(mcp) as client:
             return [
-                t.model_dump(mode="json", exclude_none=True)
+                # by_alias=True: mcp 2.x's Tool fields are snake_case
+                # (input_schema); the wire, and this golden, stay camelCase
+                # (inputSchema).
+                t.model_dump(mode="json", exclude_none=True, by_alias=True)
                 for t in await client.list_tools()
             ]
 
