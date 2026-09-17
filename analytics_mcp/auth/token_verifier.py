@@ -42,10 +42,10 @@ class TokenVerifier(_SDKTokenVerifier):
             "GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"
         ] = "GET",
         required_scopes: list[str] | None = None,
-        content_type: Literal[
-            "application/json", "application/x-www-form-urlencoded"
-        ]
-        | None = None,
+        content_type: (
+            Literal["application/json", "application/x-www-form-urlencoded"]
+            | None
+        ) = None,
     ) -> None:
         super().__init__()
         self.url = url
