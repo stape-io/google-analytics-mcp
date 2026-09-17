@@ -25,6 +25,7 @@ TEST_COMMAND = [
     "unittest",
     "discover",
     "--buffer",
+    "-t=.",
     "-s=tests",
     "-p",
     "*_test.py",
