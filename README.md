@@ -375,7 +375,7 @@ cd google-analytics-mcp
 uv sync --all-extras
 ```
 
-Requires Python 3.10+. To test changes by issuing prompts in Gemini, point the `analytics-mcp` entry in your `~/.gemini/settings.json` at your local checkout:
+Requires Python 3.11+. To test changes by issuing prompts in Gemini, point the `analytics-mcp` entry in your `~/.gemini/settings.json` at your local checkout:
 
 ```json
 "command": "PATH_TO_REPO/.venv/bin/analytics-mcp"
