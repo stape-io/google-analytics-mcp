@@ -2,9 +2,9 @@
 name = "analytics-mcp"
 description = "MCP server for Google Analytics"
 version = "0.6.0"
-# Lower bound of 3.10 due to the 'mcp' dependency:
-# https://github.com/modelcontextprotocol/python-sdk/blob/main/pyproject.toml
-requires-python = ">=3.10"
+# Lower bound of 3.11: google-api-core drops 3.10 support on 2026-10-04.
+# Not forced by the mcp/fastmcp dependency -- both still declare >=3.10.
+requires-python = ">=3.11"
 license = "Apache-2.0"
 readme = "README.md"
 dependencies = [
@@ -32,10 +32,10 @@ classifiers = [
     "Intended Audience :: Developers",
     "Intended Audience :: End Users/Desktop",
     "Programming Language :: Python",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Operating System :: OS Independent",
     "Topic :: Internet",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
@@ -85,7 +85,7 @@ follow_untyped_imports = true
 [tool.ruff]
 line-length = 80
 src = ["analytics_mcp", "tests"]
-target-version = "py310"
+target-version = "py311"
 
 [tool.ruff.lint]
 select = [
