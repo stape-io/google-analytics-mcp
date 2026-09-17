@@ -74,7 +74,7 @@ redis = [
 
 [package.metadata]
 requires-dist = [
-    { name = "black", marker = "extra == 'dev'" },
+    { name = "black", marker = "extra == 'dev'", specifier = "==26.5.1" },
     { name = "fastmcp", specifier = ">=3.2.4" },
     { name = "google-adk", specifier = ">=1.29.0" },
     { name = "google-analytics-admin", specifier = "==0.29.0" },
