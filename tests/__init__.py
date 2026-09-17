@@ -14,8 +14,15 @@
 
 """Test package init.
 
-Runs before any analytics_mcp import, because unittest discovery imports this
-package first. Two jobs:
+Runs before any analytics_mcp import -- but only if unittest discovery is
+invoked with an explicit top-level directory (`-t .`), which makes it import
+`tests` as the package `tests.schema_test` etc. Bare `-s=tests` with no `-t`
+treats `tests/` itself as the top-level directory and imports test modules
+as top-level modules (`schema_test`, not `tests.schema_test`), which never
+triggers this file at all. `noxfile.py`'s TEST_COMMAND passes `-t=.` for
+exactly this reason -- do not remove it.
+
+Two jobs, once it does run:
 
 1. Point pydantic-settings at a path that cannot exist, so a developer's
    gitignored .env can never change a test outcome.
