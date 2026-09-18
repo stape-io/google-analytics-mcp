@@ -1,4 +1,4 @@
 host: mcp-google-analytics.stape.dev
 image:
   repository: europe-west1-docker.pkg.dev/stape-development/stape/mcp-ga
-  tag: eb07772-26884065013-1
+  tag: b45d2ae-35360488933-1
