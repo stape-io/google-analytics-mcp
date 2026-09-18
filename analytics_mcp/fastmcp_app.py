@@ -33,7 +33,7 @@ from analytics_mcp.tools.reporting.realtime import (
 # Every tool passes an explicit description rather than letting FastMCP
 # derive one from the docstring. FastMCP's own parsing would strip the
 # `Args:` block into per-property schema descriptions instead -- a real
-# improvement, but a model-facing change to 3 tools' descriptions that
+# improvement, but a model-facing change to 4 tools' descriptions that
 # deserves its own reviewable PR, not a side effect of this migration.
 # inspect.getdoc(fn) reproduces the previous (ADK-derived) description
 # byte-for-byte for the 5 tools that don't have a dedicated hint function;
