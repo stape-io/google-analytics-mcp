@@ -78,7 +78,15 @@ def format(session: nox.Session) -> None:
 
 @nox.session(python=PYTHON_VERSIONS)
 def tests(session: nox.Session) -> None:
-    session.install(".")
+    # Install the locked versions, not whatever PyPI resolves today: the
+    # smoke goldens are byte-exact and depend on the exact dependency set.
+    session.run_install(
+        "uv",
+        "sync",
+        "--frozen",
+        "--inexact",
+        env={"UV_PROJECT_ENVIRONMENT": session.virtualenv.location},
+    )
     # modules for testing
     session.install(*TEST_DEPENDENCIES)
     session.run(*FREEZE_COMMAND)
