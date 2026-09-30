@@ -11,10 +11,10 @@ dependencies = [
     "google-analytics-data==0.22.0",
     "google-analytics-admin==0.29.0",
     "google-auth~=2.40",
-    "mcp>=1.24.0",
+    "mcp>=1.24.0,<2",
     "google-adk>=1.29.0",
     "httpx>=0.28.1",
-    "fastmcp>=3.2.4",
+    "fastmcp>=3.2.4,<4",
 ]
 keywords = ["google analytics", "analytics", "mcp", "ga4"]
 classifiers = [
