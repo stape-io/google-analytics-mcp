@@ -20,6 +20,8 @@ directly. These are the only assertions that the modern, sessionless MCP
 revision (2026-07-28) is served at all, alongside the legacy 2025-11-25 era.
 """
 
+import importlib.metadata
+import inspect
 import unittest
 
 from fastmcp import Client
@@ -29,7 +31,25 @@ from fastmcp import Client
 # On the pre-upgrade stack (fastmcp 3.x) this is False, so
 # ProtocolNegotiationTest self-arms the moment the SDK bump lands, with no
 # red CI in the meantime.
-_SUPPORTS_ERA_NEGOTIATION = hasattr(Client, "protocol_version")
+_SUPPORTS_ERA_NEGOTIATION = (
+    hasattr(Client, "protocol_version")
+    and "mode" in inspect.signature(Client).parameters
+)
+
+
+class EraNegotiationGuardTest(unittest.TestCase):
+    def test_guard_arms_on_fastmcp_4(self) -> None:
+        """Skipping ProtocolNegotiationTest is only valid before fastmcp 4.
+        If 4.x stops exposing the attribute/kwarg the guard probes, fail
+        loudly instead of skipping forever."""
+        major = int(importlib.metadata.version("fastmcp").split(".")[0])
+        if major >= 4:
+            self.assertTrue(
+                _SUPPORTS_ERA_NEGOTIATION,
+                "fastmcp >= 4 is installed but Client no longer exposes "
+                "`protocol_version` and/or the `mode` kwarg; update the "
+                "_SUPPORTS_ERA_NEGOTIATION probe.",
+            )
 
 
 @unittest.skipUnless(
