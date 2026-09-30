@@ -27,12 +27,15 @@ jobs:
     - name: Run ruff
       # ruff/mypy findings and the wire goldens don't depend on which
       # interpreter runs them; gated to 3.14 (the Dockerfile's version) so
-      # they run once, on the version actually shipped.
+      # they run once, on the version actually shipped. Run from uv.lock:
+      # mypy's result depends on the installed dependencies' types (e.g. a
+      # `# type: ignore` turning unused), so unpinned resolution could fail
+      # unrelated PRs.
       if: matrix.python-version == '3.14'
-      run: ruff check .
+      run: uv run --frozen --extra dev ruff check .
     - name: Run mypy
       if: matrix.python-version == '3.14'
-      run: mypy
+      run: uv run --frozen --extra dev mypy
     - name: Run tests
       run: nox -s tests-${{ matrix.python-version }}
     - name: Run wire smoke tests
