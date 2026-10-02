@@ -74,14 +74,14 @@ redis = [
 
 [package.metadata]
 requires-dist = [
-    { name = "black", marker = "extra == 'dev'" },
-    { name = "fastmcp", specifier = ">=3.2.4" },
+    { name = "black", marker = "extra == 'dev'", specifier = "==26.5.1" },
+    { name = "fastmcp", specifier = ">=3.2.4,<4" },
     { name = "google-adk", specifier = ">=1.29.0" },
     { name = "google-analytics-admin", specifier = "==0.29.0" },
     { name = "google-analytics-data", specifier = "==0.22.0" },
     { name = "google-auth", specifier = "~=2.40" },
     { name = "httpx", specifier = ">=0.28.1" },
-    { name = "mcp", specifier = ">=1.24.0" },
+    { name = "mcp", specifier = ">=1.24.0,<2" },
     { name = "nox", marker = "extra == 'dev'", specifier = ">=2026.2.9,<2027" },
     { name = "redis", extras = ["hiredis"], marker = "extra == 'redis'", specifier = ">=7.4.0" },
 ]

@@ -11,10 +11,10 @@ dependencies = [
     "google-analytics-data==0.22.0",
     "google-analytics-admin==0.29.0",
     "google-auth~=2.40",
-    "mcp>=1.24.0",
+    "mcp>=1.24.0,<2",
     "google-adk>=1.29.0",
     "httpx>=0.28.1",
-    "fastmcp>=3.2.4",
+    "fastmcp>=3.2.4,<4",
 ]
 keywords = ["google analytics", "analytics", "mcp", "ga4"]
 classifiers = [
@@ -47,7 +47,7 @@ analytics-mcp = "analytics_mcp.server:run_server"
 google-analytics-mcp = "analytics_mcp.server:run_server"
 
 [project.optional-dependencies]
-dev = ["black", "nox >=2026.2.9, <2027"]
+dev = ["black==26.5.1", "nox >=2026.2.9, <2027"]
 redis = ["redis[hiredis]>=7.4.0"]
 
 [build-system]
