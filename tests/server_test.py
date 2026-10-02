@@ -22,7 +22,10 @@ revision (2026-07-28) is served at all, alongside the legacy 2025-11-25 era.
 
 import importlib.metadata
 import inspect
+import os
+import sys
 import unittest
+from unittest import mock
 
 from fastmcp import Client
 
@@ -107,16 +110,35 @@ class HttpAppTest(unittest.TestCase):
 
     def test_healthz_returns_ok_without_auth(self) -> None:
         """The probe must answer 200 with no bearer token: kubelet sends
-        none. A future auth middleware wrapping the whole app would break
-        it."""
+        none. Built with the production auth config (AUTH_PROVIDER=google,
+        chart/templates/deployment.yaml) because tests/__init__.py strips it,
+        and a bare import would build FastMCP(auth=None) and prove nothing.
+        An auth layer wrapping the whole app would break it."""
         from starlette.testclient import TestClient
 
-        import server
+        from tests.auth_test import AUTH_ENV, BASE_URL
 
-        with TestClient(server.app) as client:
-            response = client.get("/healthz")
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), {"status": "ok"})
+        env = {
+            **AUTH_ENV,
+            "GOOGLE_ANALYTICS_MCP_AUTH_PROVIDER": "google",
+            "GOOGLE_ANALYTICS_MCP_BASE_URL": BASE_URL,
+        }
+        # patch.dict(sys.modules) restores the originally imported app
+        # modules on exit, so the auth-enabled rebuild cannot leak into
+        # other tests.
+        with mock.patch.dict(os.environ, env), mock.patch.dict(sys.modules):
+            sys.modules.pop("server", None)
+            sys.modules.pop("analytics_mcp.fastmcp_app", None)
+            import server
+
+            self.assertIsNotNone(server.mcp.auth)
+            with TestClient(server.app) as client:
+                health = client.get("/healthz")
+                # Auth really is on: /mcp rejects an anonymous request.
+                mcp_response = client.post("/mcp", json={})
+        self.assertEqual(health.status_code, 200)
+        self.assertEqual(health.json(), {"status": "ok"})
+        self.assertEqual(mcp_response.status_code, 401)
 
 
 if __name__ == "__main__":
