@@ -17,9 +17,13 @@
 Each invariant here is the assertion form of one hand-written fixup in
 analytics_mcp/coordinator.py, which the MCP SDK v2 upgrade deletes (the stdio
 path is unified onto the same FastMCP server that already serves production
-HTTP). Measured against the pre-upgrade code, three of those four fixups are
-already no-ops -- but that was only ever true by accident, and nothing
-recorded it. Now something does.
+HTTP). Measured against the raw ADK schemas (before the coordinator's
+import-time fixups mutate them), two of those four fixups are already
+no-ops: the anyOf/null deletion and the `required` injection. The empty-schema
+patch is load-bearing (get_account_summaries, see KNOWN_EMPTY_INPUT_SCHEMA),
+and the additionalProperties sanitizer rewrites run_funnel_report only (see
+KNOWN_NON_BOOLEAN_ADDITIONAL_PROPERTIES). That was only ever true by accident,
+and nothing recorded it. Now something does.
 """
 
 import asyncio
@@ -68,6 +72,14 @@ KNOWN_NON_BOOLEAN_ADDITIONAL_PROPERTIES = {
     "run_funnel_report",
 }
 
+# ADK emits a bare {} inputSchema for a zero-arg tool; coordinator.py patches
+# it at import. FastMCP never emits it. Pinned (see
+# AdkInvariantsTest.test_known_empty_schema_is_still_raw_adk_behaviour) so the
+# day ADK fixes this, the test fails and the exception gets deleted.
+KNOWN_EMPTY_INPUT_SCHEMA = {
+    "get_account_summaries",
+}
+
 HAS_COORDINATOR = (
     importlib.util.find_spec("analytics_mcp.coordinator") is not None
 )
@@ -89,12 +101,21 @@ def fastmcp_tools() -> dict[str, dict]:
 
 
 def adk_tools() -> dict[str, dict]:
-    """name -> tool dict on the pre-upgrade stdio path. Retires with coordinator."""
+    """name -> RAW ADK tool dict. Retires with coordinator.
+
+    Deliberately not coordinator.mcp_tools: the fixup loop in coordinator.py
+    mutates those at import, so asserting on them would only check the
+    fixups' own output and could never fail. Converting coordinator.tools
+    again gives fresh, unpatched objects.
+    """
     import analytics_mcp.coordinator as coordinator
+    from google.adk.tools.mcp_tool.conversion_utils import (
+        adk_to_mcp_tool_type,
+    )
 
     return {
         t.name: t.model_dump(mode="json", exclude_none=True)
-        for t in coordinator.mcp_tools
+        for t in (adk_to_mcp_tool_type(x) for x in coordinator.tools)
     }
 
 
@@ -123,6 +144,8 @@ else:
 class _InvariantsMixin(_Base):
     """Subclassed once per stack so failures name the stack that broke."""
 
+    known_empty_input_schema: typing.ClassVar[set[str]] = set()
+
     def tools(self) -> dict[str, dict]:
         raise NotImplementedError
 
@@ -141,6 +164,8 @@ class _InvariantsMixin(_Base):
         one fixup that was actually load-bearing.
         """
         for name, tool in self.all_tools.items():
+            if name in self.known_empty_input_schema:
+                continue
             with self.subTest(tool=name):
                 schema = tool["inputSchema"]
                 self.assertEqual(schema.get("type"), "object")
@@ -209,8 +234,19 @@ class FastMcpInvariantsTest(_InvariantsMixin, unittest.TestCase):
 
 @unittest.skipUnless(HAS_COORDINATOR, "coordinator.py removed by the upgrade")
 class AdkInvariantsTest(_InvariantsMixin, unittest.TestCase):
+    known_empty_input_schema = KNOWN_EMPTY_INPUT_SCHEMA
+
     def tools(self) -> dict[str, dict]:
         return adk_tools()
+
+    def test_known_empty_schema_is_still_raw_adk_behaviour(self) -> None:
+        """Pins the measurement: the empty-schema fixup is load-bearing."""
+        empty = {
+            name
+            for name, tool in self.all_tools.items()
+            if tool["inputSchema"] == {}
+        }
+        self.assertEqual(empty, KNOWN_EMPTY_INPUT_SCHEMA)
 
 
 @unittest.skipUnless(HAS_COORDINATOR, "coordinator.py removed by the upgrade")
