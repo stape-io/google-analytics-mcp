@@ -93,7 +93,12 @@ def fastmcp_tools() -> dict[str, dict]:
     async def _list() -> dict[str, dict]:
         async with Client(mcp) as client:
             return {
-                t.name: t.model_dump(mode="json", exclude_none=True)
+                # by_alias=True: mcp 2.x's Tool fields are snake_case
+                # (input_schema); the wire, and this snapshot, stay
+                # camelCase (inputSchema).
+                t.name: t.model_dump(
+                    mode="json", exclude_none=True, by_alias=True
+                )
                 for t in await client.list_tools()
             }
 
@@ -108,13 +113,16 @@ def adk_tools() -> dict[str, dict]:
     fixups' own output and could never fail. Converting coordinator.tools
     again gives fresh, unpatched objects.
     """
-    import analytics_mcp.coordinator as coordinator
+    # Deliberately imports a module this same migration deletes: only ever
+    # called from tests gated behind `skipUnless(HAS_COORDINATOR, ...)`, so
+    # it's dead code post-upgrade, not a live import mypy can resolve.
+    import analytics_mcp.coordinator as coordinator  # type: ignore[import-not-found]
     from google.adk.tools.mcp_tool.conversion_utils import (
         adk_to_mcp_tool_type,
     )
 
     return {
-        t.name: t.model_dump(mode="json", exclude_none=True)
+        t.name: t.model_dump(mode="json", exclude_none=True, by_alias=True)
         for t in (adk_to_mcp_tool_type(x) for x in coordinator.tools)
     }
 

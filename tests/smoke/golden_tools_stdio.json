@@ -1,16 +1,45 @@
 {
   "tools": [
     {
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      },
       "description": "Retrieves information about the user's Google Analytics accounts and properties.",
       "inputSchema": {
+        "additionalProperties": false,
         "properties": {},
         "type": "object"
       },
-      "name": "get_account_summaries"
+      "name": "get_account_summaries",
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      },
+      "title": "Get Account Summaries"
     },
     {
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      },
       "description": "Returns the property's custom dimensions and metrics.\n\nArgs:\n    property_id: The Google Analytics property ID. Accepted formats are:\n      - A number\n      - A string consisting of 'properties/' followed by a number",
       "inputSchema": {
+        "additionalProperties": false,
         "properties": {
           "property_id": {
             "anyOf": [
@@ -21,20 +50,36 @@
                 "type": "string"
               }
             ],
-            "title": "Property Id"
+            "description": "The Google Analytics property ID. Accepted formats are:\n- A number\n- A string consisting of 'properties/' followed by a number"
           }
         },
         "required": [
           "property_id"
         ],
-        "title": "get_custom_dimensions_and_metricsParams",
         "type": "object"
       },
-      "name": "get_custom_dimensions_and_metrics"
+      "name": "get_custom_dimensions_and_metrics",
+      "outputSchema": {
+        "additionalProperties": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "type": "object"
+      },
+      "title": "Get Custom Dimensions And Metrics"
     },
     {
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      },
       "description": "Returns details about a property.\nArgs:\n    property_id: The Google Analytics property ID. Accepted formats are:\n      - A number\n      - A string consisting of 'properties/' followed by a number",
       "inputSchema": {
+        "additionalProperties": false,
         "properties": {
           "property_id": {
             "anyOf": [
@@ -44,21 +89,30 @@
               {
                 "type": "string"
               }
-            ],
-            "title": "Property Id"
+            ]
           }
         },
         "required": [
           "property_id"
         ],
-        "title": "get_property_detailsParams",
         "type": "object"
       },
-      "name": "get_property_details"
+      "name": "get_property_details",
+      "outputSchema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Get Property Details"
     },
     {
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      },
       "description": "Returns a list of links to Google Ads accounts for a property.\n\nArgs:\n    property_id: The Google Analytics property ID. Accepted formats are:\n      - A number\n      - A string consisting of 'properties/' followed by a number",
       "inputSchema": {
+        "additionalProperties": false,
         "properties": {
           "property_id": {
             "anyOf": [
@@ -69,20 +123,42 @@
                 "type": "string"
               }
             ],
-            "title": "Property Id"
+            "description": "The Google Analytics property ID. Accepted formats are:\n- A number\n- A string consisting of 'properties/' followed by a number"
           }
         },
         "required": [
           "property_id"
         ],
-        "title": "list_google_ads_linksParams",
         "type": "object"
       },
-      "name": "list_google_ads_links"
+      "name": "list_google_ads_links",
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      },
+      "title": "List Google Ads Links"
     },
     {
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      },
       "description": "Returns annotations for a property.\n\nAnnotations are a feature that allows you to leave notes on GA4 for specific dates or periods.\nThey are typically used to record service releases, marketing campaign launches or changes,\nand rapid traffic increases or decreases due to external factors.\n\nArgs:\n    property_id: The Google Analytics property ID. Accepted formats are:\n      - A number\n      - A string consisting of 'properties/' followed by a number",
       "inputSchema": {
+        "additionalProperties": false,
         "properties": {
           "property_id": {
             "anyOf": [
@@ -93,24 +169,46 @@
                 "type": "string"
               }
             ],
-            "title": "Property Id"
+            "description": "The Google Analytics property ID. Accepted formats are:\n- A number\n- A string consisting of 'properties/' followed by a number"
           }
         },
         "required": [
           "property_id"
         ],
-        "title": "list_property_annotationsParams",
         "type": "object"
       },
-      "name": "list_property_annotations"
+      "name": "list_property_annotations",
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      },
+      "title": "List Property Annotations"
     },
     {
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      },
       "description": "\n          Runs a Google Analytics Data API conversions report.\n\nUSE THIS TOOL INSTEAD OF `run_report` WHEN:\n- You need to report specifically on conversions, ad performance, return on ad spend (ROAS), or attribution.\n- You need to query specific conversion metrics (e.g., advertiserAdCost, returnOnAdSpendByInteractionDate, allConversionsByConversionDate, etc.).\n- You need to apply a specific attribution model (e.g., DATA_DRIVEN or LAST_CLICK) to your data.\n- The user's query explicitly asks about conversions, ad clicks, ad costs, or campaigns related to conversions.\n\nSee the conversions report guide at\nhttps://developers.google.com/analytics/devguides/reporting/data/v1/conversions-api-basics\nfor details and examples.\n\nArgs:\n    property_id: The Google Analytics property ID. Accepted formats are:\n      - A number\n      - A string consisting of 'properties/' followed by a number\n    date_ranges: A list of date ranges\n      (https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1alpha/DateRange)\n      to include in the report.\n    dimensions: A list of dimensions to include in the report.\n    metrics: A list of metrics to include in the report.\n    conversion_spec: The specification for conversions reporting.\n      Should include 'conversion_actions' (list of resource names) and\n      'attribution_model'.\n    dimension_filter: A Data API FilterExpression\n      (https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1alpha/FilterExpression)\n      to apply to the dimensions.\n    metric_filter: A Data API FilterExpression\n      (https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1alpha/FilterExpression)\n      to apply to the metrics.\n    order_bys: A list of Data API OrderBy\n      (https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1alpha/OrderBy)\n      objects to apply to the dimensions and metrics.\n    limit: The maximum number of rows to return in each response. Value must\n      be a positive integer <= 250,000.\n    offset: The row count of the start row. The first row is counted as row 0.\n    currency_code: The currency code to use for currency values.\n    return_property_quota: Whether to return property quota in the response.\n\n\n          ## Hints for arguments\n\n          Here are some hints that outline the expected format and requirements\n          for arguments.\n\n          ### Hints for `dimensions`\n\n          The `dimensions` list must consist solely of the following allowed standard dimensions:\n          - campaignName\n          - continent\n          - country\n          - defaultChannelGroup\n          - deviceCategory\n          - medium\n          - platform\n          - primaryChannelGroup\n          - source\n          - sourceMedium\n          - sourcePlatform\n          - subcontinent\n\n          ### Hints for `metrics`\n\n          The `metrics` list must consist solely of the following allowed standard metrics:\n          - advertiserAdClicks\n          - advertiserAdCost\n          - advertiserAdCostPerAllConversionsByConversionDate\n          - advertiserAdCostPerAllConversionsByInteractionDate\n          - advertiserAdCostPerClick\n          - advertiserAdImpressions\n          - allConversionsByConversionDate\n          - allConversionsByInteractionDate\n          - returnOnAdSpendByConversionDate\n          - returnOnAdSpendByInteractionDate\n          - totalRevenueByConversionDate\n          - totalRevenueByInteractionDate\n\n          ### Hints for `conversion_spec`\n\n          The `conversion_spec` argument is required for conversions reporting.\n          You can pass an empty list for `conversion_actions` if you want all conversion events.\n          Example:\n          {\n              \"conversion_actions\": [\"conversionActions/12345\"], # Or [] for all actions\n              \"attribution_model\": \"DATA_DRIVEN\"  # Or \"LAST_CLICK\"\n          }\n\n          ### Hints for `date_ranges`:\n          Example date_range arguments:\n      1. A single date range:\n\n        [ {\"start_date\": \"2025-01-01\", \"end_date\": \"2025-01-31\", \"name\": \"Jan2025\"} ]\n\n      2. A relative date range using 'yesterday' and 'today':\n        [ {\"start_date\": \"yesterday\", \"end_date\": \"today\", \"name\": \"YesterdayAndToday\"} ]\n\n      3. A relative date range using 'NdaysAgo' and 'today':\n        [ {\"start_date\": \"30daysAgo\", \"end_date\": \"yesterday\", \"name\": \"Previous30Days\"}]\n\n      4. Multiple date ranges:\n        [ {\"start_date\": \"2025-01-01\", \"end_date\": \"2025-01-31\", \"name\": \"Jan2025\"}, {\"start_date\": \"2025-02-01\", \"end_date\": \"2025-02-28\", \"name\": \"Feb2025\"} ]\n    \n\n          ### Hints for `dimension_filter`:\n          Example dimension_filter arguments:\n      1. A simple filter:\n        {\"filter\": {\"field_name\": \"eventName\", \"string_filter\": {\"match_type\": 2, \"value\": \"add\", \"case_sensitive\": false}}}\n\n      2. A NOT filter:\n        {\"not_expression\": {\"filter\": {\"field_name\": \"eventName\", \"string_filter\": {\"match_type\": 2, \"value\": \"add\", \"case_sensitive\": false}}}}\n\n      3. An empty value filter:\n        {\"filter\": {\"field_name\": \"source\", \"empty_filter\": {}}}\n\n      4. An AND group filter:\n        {\"and_group\": {\"expressions\": [{\"filter\": {\"field_name\": \"sourceMedium\", \"string_filter\": {\"match_type\": 1, \"value\": \"google / cpc\", \"case_sensitive\": false}}}, {\"filter\": {\"field_name\": \"eventName\", \"in_list_filter\": {\"values\": [\"first_visit\", \"purchase\", \"add_to_cart\"], \"case_sensitive\": true}}}]}}\n\n      5. An OR group filter:\n        {\"or_group\": {\"expressions\": [{\"filter\": {\"field_name\": \"sourceMedium\", \"string_filter\": {\"match_type\": 1, \"value\": \"google / cpc\", \"case_sensitive\": false}}}, {\"filter\": {\"field_name\": \"eventName\", \"in_list_filter\": {\"values\": [\"first_visit\", \"purchase\", \"add_to_cart\"], \"case_sensitive\": true}}}]}}\n\n    \n  Notes:\n    The API applies the `dimension_filter` and `metric_filter`\n    independently. As a result, some complex combinations of dimension and\n    metric filters are not possible in a single report request.\n\n    For example, you can't create a `dimension_filter` and `metric_filter`\n    combination for the following condition:\n\n    (\n      (eventName = \"page_view\" AND eventCount > 100)\n      OR\n      (eventName = \"join_group\" AND eventCount < 50)\n    )\n\n    This isn't possible because there's no way to apply the condition\n    \"eventCount > 100\" only to the data with eventName of \"page_view\", and\n    the condition \"eventCount < 50\" only to the data with eventName of\n    \"join_group\".\n\n    More generally, you can't define a `dimension_filter` and `metric_filter`\n    for:\n\n    (\n      ((dimension condition D1) AND (metric condition M1))\n      OR\n      ((dimension condition D2) AND (metric condition M2))\n    )\n\n    If you have complex conditions like this, either:\n\n    a)  Run a single report that applies a subset of the conditions that\n        the API supports as well as the data needed to perform filtering of the\n        API response on the client side. For example, for the condition:\n        (\n          (eventName = \"page_view\" AND eventCount > 100)\n          OR\n          (eventName = \"join_group\" AND eventCount < 50)\n        )\n        You could run a report that filters only on:\n        eventName one of \"page_view\" or \"join_group\"\n        and include the eventCount metric, then filter the API response on the\n        client side to apply the different metric filters for the different\n        events.\n\n    or\n\n    b)  Run a separate report for each combination of dimension condition and\n        metric condition. For the example above, you'd run one report for the\n        combination of (D1 AND M1), and another report for the combination of\n        (D2 AND M2).\n\n    Try to run fewer reports (option a) if possible. However, if running\n    fewer reports results in excessive quota usage for the API, use option\n    b. More information on quota usage is at\n    https://developers.google.com/analytics/blog/2023/data-api-quota-management.\n  \n\n          ### Hints for `metric_filter`:\n          Example metric_filter arguments:\n      1. A simple filter:\n        {\"filter\": {\"field_name\": \"eventCount\", \"numeric_filter\": {\"operation\": 4, \"value\": {\"int64_value\": \"10\"}}}}\n\n      2. A NOT filter:\n        {\"not_expression\": {\"filter\": {\"field_name\": \"eventCount\", \"numeric_filter\": {\"operation\": 4, \"value\": {\"int64_value\": \"10\"}}}}}\n\n      3. An empty value filter:\n        {\"filter\": {\"field_name\": \"purchaseRevenue\", \"empty_filter\": {}}}\n\n      4. An AND group filter:\n        {\"and_group\": {\"expressions\": [{\"filter\": {\"field_name\": \"eventCount\", \"numeric_filter\": {\"operation\": 4, \"value\": {\"int64_value\": \"10\"}}}}, {\"filter\": {\"field_name\": \"purchaseRevenue\", \"between_filter\": {\"from_value\": {\"double_value\": 10.0}, \"to_value\": {\"double_value\": 25.0}}}}]}}\n\n      5. An OR group filter:\n        {\"or_group\": {\"expressions\": [{\"filter\": {\"field_name\": \"eventCount\", \"numeric_filter\": {\"operation\": 4, \"value\": {\"int64_value\": \"10\"}}}}, {\"filter\": {\"field_name\": \"purchaseRevenue\", \"between_filter\": {\"from_value\": {\"double_value\": 10.0}, \"to_value\": {\"double_value\": 25.0}}}}]}}\n\n    \n  Notes:\n    The API applies the `dimension_filter` and `metric_filter`\n    independently. As a result, some complex combinations of dimension and\n    metric filters are not possible in a single report request.\n\n    For example, you can't create a `dimension_filter` and `metric_filter`\n    combination for the following condition:\n\n    (\n      (eventName = \"page_view\" AND eventCount > 100)\n      OR\n      (eventName = \"join_group\" AND eventCount < 50)\n    )\n\n    This isn't possible because there's no way to apply the condition\n    \"eventCount > 100\" only to the data with eventName of \"page_view\", and\n    the condition \"eventCount < 50\" only to the data with eventName of\n    \"join_group\".\n\n    More generally, you can't define a `dimension_filter` and `metric_filter`\n    for:\n\n    (\n      ((dimension condition D1) AND (metric condition M1))\n      OR\n      ((dimension condition D2) AND (metric condition M2))\n    )\n\n    If you have complex conditions like this, either:\n\n    a)  Run a single report that applies a subset of the conditions that\n        the API supports as well as the data needed to perform filtering of the\n        API response on the client side. For example, for the condition:\n        (\n          (eventName = \"page_view\" AND eventCount > 100)\n          OR\n          (eventName = \"join_group\" AND eventCount < 50)\n        )\n        You could run a report that filters only on:\n        eventName one of \"page_view\" or \"join_group\"\n        and include the eventCount metric, then filter the API response on the\n        client side to apply the different metric filters for the different\n        events.\n\n    or\n\n    b)  Run a separate report for each combination of dimension condition and\n        metric condition. For the example above, you'd run one report for the\n        combination of (D1 AND M1), and another report for the combination of\n        (D2 AND M2).\n\n    Try to run fewer reports (option a) if possible. However, if running\n    fewer reports results in excessive quota usage for the API, use option\n    b. More information on quota usage is at\n    https://developers.google.com/analytics/blog/2023/data-api-quota-management.\n  \n\n          ### Hints for `order_bys`:\n          Example order_bys arguments:\n\n    1.  Order by ascending 'eventName':\n        [ {\"dimension\": {\"dimension_name\": \"eventName\", \"order_type\": 1}, \"desc\": false} ]\n\n    2.  Order by descending 'eventName', ignoring case:\n        [ {\"dimension\": {\"dimension_name\": \"campaignName\", \"order_type\": 2}, \"desc\": true} ]\n\n    3.  Order by ascending 'audienceId':\n        [ {\"dimension\": {\"dimension_name\": \"audienceId\", \"order_type\": 3}, \"desc\": false} ]\n\n    4.  Order by descending 'eventCount':\n        [ {\"metric\": {\"metric_name\": \"eventValue\"}, \"desc\": true} ]\n\n    5.  Order by ascending 'eventCount':\n        [ {\"metric\": {\"metric_name\": \"eventCount\"}, \"desc\": false} ]\n\n    6.  Combination of dimension and metric order bys:\n        [\n          {\"dimension\": {\"dimension_name\": \"eventName\", \"order_type\": 1}, \"desc\": false},\n          {\"metric\": {\"metric_name\": \"eventValue\"}, \"desc\": true},\n        ]\n\n    7.  Order by multiple dimensions and metrics:\n        [\n          {\"dimension\": {\"dimension_name\": \"eventName\", \"order_type\": 1}, \"desc\": false},\n          {\"dimension\": {\"dimension_name\": \"audienceId\", \"order_type\": 3}, \"desc\": false},\n          {\"metric\": {\"metric_name\": \"eventValue\"}, \"desc\": true},\n        ]\n\n    The dimensions and metrics in order_bys must also be present in the report\n    request's \"dimensions\" and \"metrics\" arguments, respectively.\n    \n\n          ",
       "inputSchema": {
+        "additionalProperties": false,
         "properties": {
           "conversion_spec": {
             "additionalProperties": true,
-            "title": "Conversion Spec",
+            "description": "The specification for conversions reporting.\nShould include 'conversion_actions' (list of resource names) and\n'attribution_model'.",
             "type": "object"
           },
           "currency_code": {
@@ -123,14 +221,14 @@
               }
             ],
             "default": null,
-            "title": "Currency Code"
+            "description": "The currency code to use for currency values."
           },
           "date_ranges": {
+            "description": "A list of date ranges\n(https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1alpha/DateRange)\nto include in the report.",
             "items": {
               "additionalProperties": true,
               "type": "object"
             },
-            "title": "Date Ranges",
             "type": "array"
           },
           "dimension_filter": {
@@ -144,13 +242,13 @@
               }
             ],
             "default": null,
-            "title": "Dimension Filter"
+            "description": "A Data API FilterExpression\n(https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1alpha/FilterExpression)\nto apply to the dimensions."
           },
           "dimensions": {
+            "description": "A list of dimensions to include in the report.",
             "items": {
               "type": "string"
             },
-            "title": "Dimensions",
             "type": "array"
           },
           "limit": {
@@ -163,7 +261,7 @@
               }
             ],
             "default": null,
-            "title": "Limit"
+            "description": "The maximum number of rows to return in each response. Value must\nbe a positive integer <= 250,000."
           },
           "metric_filter": {
             "anyOf": [
@@ -176,13 +274,13 @@
               }
             ],
             "default": null,
-            "title": "Metric Filter"
+            "description": "A Data API FilterExpression\n(https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1alpha/FilterExpression)\nto apply to the metrics."
           },
           "metrics": {
+            "description": "A list of metrics to include in the report.",
             "items": {
               "type": "string"
             },
-            "title": "Metrics",
             "type": "array"
           },
           "offset": {
@@ -195,7 +293,7 @@
               }
             ],
             "default": null,
-            "title": "Offset"
+            "description": "The row count of the start row. The first row is counted as row 0."
           },
           "order_bys": {
             "anyOf": [
@@ -211,7 +309,7 @@
               }
             ],
             "default": null,
-            "title": "Order Bys"
+            "description": "A list of Data API OrderBy\n(https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1alpha/OrderBy)\nobjects to apply to the dimensions and metrics."
           },
           "property_id": {
             "anyOf": [
@@ -222,11 +320,11 @@
                 "type": "string"
               }
             ],
-            "title": "Property Id"
+            "description": "The Google Analytics property ID. Accepted formats are:\n- A number\n- A string consisting of 'properties/' followed by a number"
           },
           "return_property_quota": {
             "default": false,
-            "title": "Return Property Quota",
+            "description": "Whether to return property quota in the response.",
             "type": "boolean"
           }
         },
@@ -237,20 +335,32 @@
           "metrics",
           "conversion_spec"
         ],
-        "title": "run_conversions_reportParams",
         "type": "object"
       },
-      "name": "run_conversions_report"
+      "name": "run_conversions_report",
+      "outputSchema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Run Conversions Report"
     },
     {
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      },
       "description": "\n        Run a Google Analytics Data API funnel report.\n\nSee the funnel report guide at\nhttps://developers.google.com/analytics/devguides/reporting/data/v1/funnels\nfor details and examples.\n\nArgs:\n    property_id: The Google Analytics property ID. Accepted formats are:\n      - A number\n      - A string consisting of 'properties/' followed by a number\n    funnel_steps: A list of funnel steps. Each step should be a dictionary\n      containing:\n      - 'name': (str) Display name for the step\n      - 'filter_expression': (Dict) Complete filter expression for the step\n      OR for simple event-based steps:\n      - 'name': (str) Display name for the step\n      - 'event': (str) Event name to filter on\n    date_ranges: A list of date ranges\n      (https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/DateRange)\n      to include in the report.\n    funnel_breakdown: Optional breakdown dimension to segment the funnel.\n      This creates separate funnel results for each value of the dimension.\n      Example: {\"breakdown_dimension\": \"deviceCategory\"}\n    funnel_next_action: Optional next action analysis configuration.\n      This analyzes what users do after completing or dropping off from\n      the funnel.\n      Example: {\"next_action_dimension\": \"eventName\", \"limit\": 5}\n    segments: Optional list of segments to apply to the funnel.\n    return_property_quota: Whether to return current property quota\n      information.\n\nReturns:\n    Dict containing the funnel report response with funnel results\n    including:\n    - funnel_table: Table showing progression through funnel steps\n    - funnel_visualization: Data for visualizing the funnel\n    - property_quota: (if requested) Current quota usage information\n\nRaises:\n    ValueError: If funnel_steps is empty or contains invalid configurations\n    Exception: If the API request fails\n\n\n        ## Hints for arguments\n\n        Here are some hints that outline the expected format and requirements\n        for arguments.\n\n        ### Hints for `funnel_breakdown`\n\n        The `funnel_breakdown` parameter allows you to segment funnel results by a dimension:\n        ```json\n        {\n            \"breakdown_dimension\": \"deviceCategory\"\n        }\n        ```\n        Common breakdown dimensions include:\n        - `deviceCategory` - Desktop, Mobile, Tablet\n        - `country` - User's country\n        - `operatingSystem` - User's operating system\n        - `browser` - User's browser\n\n        ### Hints for `funnel_next_action`\n\n        The `funnel_next_action` parameter analyzes what users do after completing or dropping off from the funnel:\n        ```json\n        {\n            \"next_action_dimension\": \"eventName\",\n            \"limit\": 5\n        }\n        ```\n        Common next action dimensions include:\n        - `eventName` - Next events users trigger\n        - `pagePath` - Next pages users visit\n\n        ### Hints for `segments`\n\n        The `segments` parameter allows you to segment funnel results by user criteria.\n        Each segment is a dictionary passed directly to `data_v1alpha.Segment()`.\n        See https://developers.google.com/analytics/devguides/reporting/data/v1/funnels#segments\n        for details and examples.\n\n        ### Hints for `date_ranges`:\n        Example date_range arguments:\n      1. A single date range:\n\n        [ {\"start_date\": \"2025-01-01\", \"end_date\": \"2025-01-31\", \"name\": \"Jan2025\"} ]\n\n      2. A relative date range using 'yesterday' and 'today':\n        [ {\"start_date\": \"yesterday\", \"end_date\": \"today\", \"name\": \"YesterdayAndToday\"} ]\n\n      3. A relative date range using 'NdaysAgo' and 'today':\n        [ {\"start_date\": \"30daysAgo\", \"end_date\": \"yesterday\", \"name\": \"Previous30Days\"}]\n\n      4. Multiple date ranges:\n        [ {\"start_date\": \"2025-01-01\", \"end_date\": \"2025-01-31\", \"name\": \"Jan2025\"}, {\"start_date\": \"2025-02-01\", \"end_date\": \"2025-02-28\", \"name\": \"Feb2025\"} ]\n    \n\n        ### Hints for `funnel_steps`\n        Example funnel_steps configurations:\n\n    1. Simple event-based step (first open/visit):\n        {\"name\": \"First open/visit\", \"filter_expression\": {\"or_group\": {\"expressions\": [{\"funnel_event_filter\": {\"event_name\": \"first_open\"}}, {\"funnel_event_filter\": {\"event_name\": \"first_visit\"}}]}}, \"is_directly_followed_by\": false}\n\n    2. Field filter for organic traffic:\n        {\"name\": \"Organic visitors\", \"filter_expression\": {\"funnel_field_filter\": {\"field_name\": \"firstUserMedium\", \"string_filter\": {\"match_type\": 4, \"value\": \"organic\", \"case_sensitive\": false}}}, \"is_directly_followed_by\": false}\n\n    3. Simple event filter:\n        {\"name\": \"Session start\", \"filter_expression\": {\"funnel_event_filter\": {\"event_name\": \"session_start\"}}, \"is_directly_followed_by\": false}\n\n    4. Multiple events with OR condition:\n        {\"name\": \"Screen/Page view\", \"filter_expression\": {\"or_group\": {\"expressions\": [{\"funnel_event_filter\": {\"event_name\": \"screen_view\"}}, {\"funnel_event_filter\": {\"event_name\": \"page_view\"}}]}}, \"is_directly_followed_by\": false}\n\n    5. Purchase events (multiple event types):\n        {\"name\": \"Purchase\", \"filter_expression\": {\"or_group\": {\"expressions\": [{\"funnel_event_filter\": {\"event_name\": \"purchase\"}}, {\"funnel_event_filter\": {\"event_name\": \"in_app_purchase\"}}]}}, \"is_directly_followed_by\": false}\n\n    6. Event with parameter filter (value > 50):\n        {\"name\": \"Add to cart (value > 50)\", \"filter_expression\": {\"funnel_event_filter\": {\"event_name\": \"add_to_cart\", \"funnel_parameter_filter_expression\": {\"funnel_parameter_filter\": {\"event_parameter_name\": \"value\", \"numeric_filter\": {\"operation\": 4, \"value\": {\"double_value\": 50.0}}}}}}, \"is_directly_followed_by\": false}\n\n    7. Complex AND condition (page view + specific path):\n        {\"name\": \"Home page view\", \"filter_expression\": {\"and_group\": {\"expressions\": [{\"funnel_event_filter\": {\"event_name\": \"page_view\"}}, {\"funnel_field_filter\": {\"field_name\": \"pageLocation\", \"string_filter\": {\"match_type\": 4, \"value\": \"/\", \"case_sensitive\": false}}}]}}, \"is_directly_followed_by\": false}\n\n\n    ## Complete Funnel Example\n\n    A typical e-commerce funnel with 5 steps:\n    [\n        {\"name\": \"First open/visit\", \"filter_expression\": {\"or_group\": {\"expressions\": [{\"funnel_event_filter\": {\"event_name\": \"first_open\"}}, {\"funnel_event_filter\": {\"event_name\": \"first_visit\"}}]}}, \"is_directly_followed_by\": false},\n        {\"name\": \"Organic visitors\", \"filter_expression\": {\"funnel_field_filter\": {\"field_name\": \"firstUserMedium\", \"string_filter\": {\"match_type\": 4, \"value\": \"organic\", \"case_sensitive\": false}}}, \"is_directly_followed_by\": false},\n        {\"name\": \"Session start\", \"filter_expression\": {\"funnel_event_filter\": {\"event_name\": \"session_start\"}}, \"is_directly_followed_by\": false},\n        {\"name\": \"Screen/Page view\", \"filter_expression\": {\"or_group\": {\"expressions\": [{\"funnel_event_filter\": {\"event_name\": \"screen_view\"}}, {\"funnel_event_filter\": {\"event_name\": \"page_view\"}}]}}, \"is_directly_followed_by\": false},\n        {\"name\": \"Purchase\", \"filter_expression\": {\"or_group\": {\"expressions\": [{\"funnel_event_filter\": {\"event_name\": \"purchase\"}}, {\"funnel_event_filter\": {\"event_name\": \"in_app_purchase\"}}]}}, \"is_directly_followed_by\": false}\n    ]\n\n    \n\n        ",
       "inputSchema": {
+        "additionalProperties": false,
         "properties": {
           "date_ranges": {
             "anyOf": [
               {
                 "items": {
-                  "additionalProperties": true,
+                  "additionalProperties": {
+                    "type": "string"
+                  },
                   "type": "object"
                 },
                 "type": "array"
@@ -260,12 +370,14 @@
               }
             ],
             "default": null,
-            "title": "Date Ranges"
+            "description": "A list of date ranges\n(https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/DateRange)\nto include in the report."
           },
           "funnel_breakdown": {
             "anyOf": [
               {
-                "additionalProperties": true,
+                "additionalProperties": {
+                  "type": "string"
+                },
                 "type": "object"
               },
               {
@@ -273,12 +385,14 @@
               }
             ],
             "default": null,
-            "title": "Funnel Breakdown"
+            "description": "Optional breakdown dimension to segment the funnel.\nThis creates separate funnel results for each value of the dimension.\nExample: {\"breakdown_dimension\": \"deviceCategory\"}"
           },
           "funnel_next_action": {
             "anyOf": [
               {
-                "additionalProperties": true,
+                "additionalProperties": {
+                  "type": "string"
+                },
                 "type": "object"
               },
               {
@@ -286,14 +400,14 @@
               }
             ],
             "default": null,
-            "title": "Funnel Next Action"
+            "description": "Optional next action analysis configuration.\nThis analyzes what users do after completing or dropping off from\nthe funnel.\nExample: {\"next_action_dimension\": \"eventName\", \"limit\": 5}"
           },
           "funnel_steps": {
+            "description": "A list of funnel steps. Each step should be a dictionary\ncontaining:\n- 'name': (str) Display name for the step\n- 'filter_expression': (Dict) Complete filter expression for the step\nOR for simple event-based steps:\n- 'name': (str) Display name for the step\n- 'event': (str) Event name to filter on",
             "items": {
               "additionalProperties": true,
               "type": "object"
             },
-            "title": "Funnel Steps",
             "type": "array"
           },
           "property_id": {
@@ -305,11 +419,11 @@
                 "type": "string"
               }
             ],
-            "title": "Property Id"
+            "description": "The Google Analytics property ID. Accepted formats are:\n- A number\n- A string consisting of 'properties/' followed by a number"
           },
           "return_property_quota": {
             "default": false,
-            "title": "Return Property Quota",
+            "description": "Whether to return current property quota\ninformation.",
             "type": "boolean"
           },
           "segments": {
@@ -326,21 +440,31 @@
               }
             ],
             "default": null,
-            "title": "Segments"
+            "description": "Optional list of segments to apply to the funnel."
           }
         },
         "required": [
           "property_id",
           "funnel_steps"
         ],
-        "title": "run_funnel_reportParams",
         "type": "object"
       },
-      "name": "run_funnel_report"
+      "name": "run_funnel_report",
+      "outputSchema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Run Funnel Report"
     },
     {
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      },
       "description": "\n          Runs a Google Analytics Data API realtime report.\n\nSee\nhttps://developers.google.com/analytics/devguides/reporting/data/v1/realtime-basics\nfor more information.\n\nArgs:\n    property_id: The Google Analytics property ID. Accepted formats are:\n      - A number\n      - A string consisting of 'properties/' followed by a number\n    dimensions: A list of dimensions to include in the report. Dimensions must be realtime dimensions.\n    metrics: A list of metrics to include in the report. Metrics must be realtime metrics.\n    dimension_filter: A Data API FilterExpression\n      (https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/FilterExpression)\n      to apply to the dimensions.  Don't use this for filtering metrics. Use\n      metric_filter instead. The `field_name` in a `dimension_filter` must\n      be a dimension, as defined in the `get_standard_dimensions` and\n      `get_dimensions` tools.\n      For more information about the expected format of this argument, see\n      the `run_report_dimension_filter_hints` tool.\n    metric_filter: A Data API FilterExpression\n      (https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/FilterExpression)\n      to apply to the metrics.  Don't use this for filtering dimensions. Use\n      dimension_filter instead. The `field_name` in a `metric_filter` must\n      be a metric, as defined in the `get_standard_metrics` and\n      `get_metrics` tools.\n      For more information about the expected format of this argument, see\n      the `run_report_metric_filter_hints` tool.\n    order_bys: A list of Data API OrderBy\n      (https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/OrderBy)\n      objects to apply to the dimensions and metrics.\n      For more information about the expected format of this argument, see\n      the `run_report_order_bys_hints` tool.\n    limit: The maximum number of rows to return in each response. Value must\n      be a positive integer <= 250,000. Used to paginate through large\n      reports, following the guide at\n      https://developers.google.com/analytics/devguides/reporting/data/v1/basics#pagination.\n    offset: The row count of the start row. The first row is counted as row\n      0. Used to paginate through large\n      reports, following the guide at\n      https://developers.google.com/analytics/devguides/reporting/data/v1/basics#pagination.\n    return_property_quota: Whether to return realtime property quota in the response.\n\n\n          ## Hints for arguments\n\n          Here are some hints that outline the expected format and requirements\n          for arguments.\n\n          ### Hints for `dimensions`\n\n          The `dimensions` list must consist solely of either of the following:\n\n          1.  Realtime standard dimensions defined in the HTML table at\n              https://developers.google.com/analytics/devguides/reporting/data/v1/realtime-api-schema#dimensions.\n              These dimensions are available to *every* property.\n          2.  User-scoped custom dimensions for the `property_id`. Use the\n              `get_custom_dimensions_and_metrics` tool to retrieve the list of\n              custom dimensions for a property, and look for the custom\n              dimensions with an `apiName` that begins with \"customUser:\".\n\n          ### Hints for `metrics`\n\n          The `metrics` list must consist solely of the Realtime standard\n          metrics defined in the HTML table at\n          https://developers.google.com/analytics/devguides/reporting/data/v1/realtime-api-schema#metrics.\n          These metrics are available to *every* property.\n\n          Realtime reports can't use custom metrics.\n\n          ### Hints for `date_ranges`:\n          Example date_range arguments:\n      1. A single date range:\n\n        [ {\"start_date\": \"2025-01-01\", \"end_date\": \"2025-01-31\", \"name\": \"Jan2025\"} ]\n\n      2. A relative date range using 'yesterday' and 'today':\n        [ {\"start_date\": \"yesterday\", \"end_date\": \"today\", \"name\": \"YesterdayAndToday\"} ]\n\n      3. A relative date range using 'NdaysAgo' and 'today':\n        [ {\"start_date\": \"30daysAgo\", \"end_date\": \"yesterday\", \"name\": \"Previous30Days\"}]\n\n      4. Multiple date ranges:\n        [ {\"start_date\": \"2025-01-01\", \"end_date\": \"2025-01-31\", \"name\": \"Jan2025\"}, {\"start_date\": \"2025-02-01\", \"end_date\": \"2025-02-28\", \"name\": \"Feb2025\"} ]\n    \n\n          ### Hints for `dimension_filter`:\n          Example dimension_filter arguments:\n      1. A simple filter:\n        {\"filter\": {\"field_name\": \"eventName\", \"string_filter\": {\"match_type\": 2, \"value\": \"add\", \"case_sensitive\": false}}}\n\n      2. A NOT filter:\n        {\"not_expression\": {\"filter\": {\"field_name\": \"eventName\", \"string_filter\": {\"match_type\": 2, \"value\": \"add\", \"case_sensitive\": false}}}}\n\n      3. An empty value filter:\n        {\"filter\": {\"field_name\": \"source\", \"empty_filter\": {}}}\n\n      4. An AND group filter:\n        {\"and_group\": {\"expressions\": [{\"filter\": {\"field_name\": \"sourceMedium\", \"string_filter\": {\"match_type\": 1, \"value\": \"google / cpc\", \"case_sensitive\": false}}}, {\"filter\": {\"field_name\": \"eventName\", \"in_list_filter\": {\"values\": [\"first_visit\", \"purchase\", \"add_to_cart\"], \"case_sensitive\": true}}}]}}\n\n      5. An OR group filter:\n        {\"or_group\": {\"expressions\": [{\"filter\": {\"field_name\": \"sourceMedium\", \"string_filter\": {\"match_type\": 1, \"value\": \"google / cpc\", \"case_sensitive\": false}}}, {\"filter\": {\"field_name\": \"eventName\", \"in_list_filter\": {\"values\": [\"first_visit\", \"purchase\", \"add_to_cart\"], \"case_sensitive\": true}}}]}}\n\n    \n  Notes:\n    The API applies the `dimension_filter` and `metric_filter`\n    independently. As a result, some complex combinations of dimension and\n    metric filters are not possible in a single report request.\n\n    For example, you can't create a `dimension_filter` and `metric_filter`\n    combination for the following condition:\n\n    (\n      (eventName = \"page_view\" AND eventCount > 100)\n      OR\n      (eventName = \"join_group\" AND eventCount < 50)\n    )\n\n    This isn't possible because there's no way to apply the condition\n    \"eventCount > 100\" only to the data with eventName of \"page_view\", and\n    the condition \"eventCount < 50\" only to the data with eventName of\n    \"join_group\".\n\n    More generally, you can't define a `dimension_filter` and `metric_filter`\n    for:\n\n    (\n      ((dimension condition D1) AND (metric condition M1))\n      OR\n      ((dimension condition D2) AND (metric condition M2))\n    )\n\n    If you have complex conditions like this, either:\n\n    a)  Run a single report that applies a subset of the conditions that\n        the API supports as well as the data needed to perform filtering of the\n        API response on the client side. For example, for the condition:\n        (\n          (eventName = \"page_view\" AND eventCount > 100)\n          OR\n          (eventName = \"join_group\" AND eventCount < 50)\n        )\n        You could run a report that filters only on:\n        eventName one of \"page_view\" or \"join_group\"\n        and include the eventCount metric, then filter the API response on the\n        client side to apply the different metric filters for the different\n        events.\n\n    or\n\n    b)  Run a separate report for each combination of dimension condition and\n        metric condition. For the example above, you'd run one report for the\n        combination of (D1 AND M1), and another report for the combination of\n        (D2 AND M2).\n\n    Try to run fewer reports (option a) if possible. However, if running\n    fewer reports results in excessive quota usage for the API, use option\n    b. More information on quota usage is at\n    https://developers.google.com/analytics/blog/2023/data-api-quota-management.\n  \n\n          ### Hints for `metric_filter`:\n          Example metric_filter arguments:\n      1. A simple filter:\n        {\"filter\": {\"field_name\": \"eventCount\", \"numeric_filter\": {\"operation\": 4, \"value\": {\"int64_value\": \"10\"}}}}\n\n      2. A NOT filter:\n        {\"not_expression\": {\"filter\": {\"field_name\": \"eventCount\", \"numeric_filter\": {\"operation\": 4, \"value\": {\"int64_value\": \"10\"}}}}}\n\n      3. An empty value filter:\n        {\"filter\": {\"field_name\": \"purchaseRevenue\", \"empty_filter\": {}}}\n\n      4. An AND group filter:\n        {\"and_group\": {\"expressions\": [{\"filter\": {\"field_name\": \"eventCount\", \"numeric_filter\": {\"operation\": 4, \"value\": {\"int64_value\": \"10\"}}}}, {\"filter\": {\"field_name\": \"purchaseRevenue\", \"between_filter\": {\"from_value\": {\"double_value\": 10.0}, \"to_value\": {\"double_value\": 25.0}}}}]}}\n\n      5. An OR group filter:\n        {\"or_group\": {\"expressions\": [{\"filter\": {\"field_name\": \"eventCount\", \"numeric_filter\": {\"operation\": 4, \"value\": {\"int64_value\": \"10\"}}}}, {\"filter\": {\"field_name\": \"purchaseRevenue\", \"between_filter\": {\"from_value\": {\"double_value\": 10.0}, \"to_value\": {\"double_value\": 25.0}}}}]}}\n\n    \n  Notes:\n    The API applies the `dimension_filter` and `metric_filter`\n    independently. As a result, some complex combinations of dimension and\n    metric filters are not possible in a single report request.\n\n    For example, you can't create a `dimension_filter` and `metric_filter`\n    combination for the following condition:\n\n    (\n      (eventName = \"page_view\" AND eventCount > 100)\n      OR\n      (eventName = \"join_group\" AND eventCount < 50)\n    )\n\n    This isn't possible because there's no way to apply the condition\n    \"eventCount > 100\" only to the data with eventName of \"page_view\", and\n    the condition \"eventCount < 50\" only to the data with eventName of\n    \"join_group\".\n\n    More generally, you can't define a `dimension_filter` and `metric_filter`\n    for:\n\n    (\n      ((dimension condition D1) AND (metric condition M1))\n      OR\n      ((dimension condition D2) AND (metric condition M2))\n    )\n\n    If you have complex conditions like this, either:\n\n    a)  Run a single report that applies a subset of the conditions that\n        the API supports as well as the data needed to perform filtering of the\n        API response on the client side. For example, for the condition:\n        (\n          (eventName = \"page_view\" AND eventCount > 100)\n          OR\n          (eventName = \"join_group\" AND eventCount < 50)\n        )\n        You could run a report that filters only on:\n        eventName one of \"page_view\" or \"join_group\"\n        and include the eventCount metric, then filter the API response on the\n        client side to apply the different metric filters for the different\n        events.\n\n    or\n\n    b)  Run a separate report for each combination of dimension condition and\n        metric condition. For the example above, you'd run one report for the\n        combination of (D1 AND M1), and another report for the combination of\n        (D2 AND M2).\n\n    Try to run fewer reports (option a) if possible. However, if running\n    fewer reports results in excessive quota usage for the API, use option\n    b. More information on quota usage is at\n    https://developers.google.com/analytics/blog/2023/data-api-quota-management.\n  \n\n          ### Hints for `order_bys`:\n          Example order_bys arguments:\n\n    1.  Order by ascending 'eventName':\n        [ {\"dimension\": {\"dimension_name\": \"eventName\", \"order_type\": 1}, \"desc\": false} ]\n\n    2.  Order by descending 'eventName', ignoring case:\n        [ {\"dimension\": {\"dimension_name\": \"campaignName\", \"order_type\": 2}, \"desc\": true} ]\n\n    3.  Order by ascending 'audienceId':\n        [ {\"dimension\": {\"dimension_name\": \"audienceId\", \"order_type\": 3}, \"desc\": false} ]\n\n    4.  Order by descending 'eventCount':\n        [ {\"metric\": {\"metric_name\": \"eventValue\"}, \"desc\": true} ]\n\n    5.  Order by ascending 'eventCount':\n        [ {\"metric\": {\"metric_name\": \"eventCount\"}, \"desc\": false} ]\n\n    6.  Combination of dimension and metric order bys:\n        [\n          {\"dimension\": {\"dimension_name\": \"eventName\", \"order_type\": 1}, \"desc\": false},\n          {\"metric\": {\"metric_name\": \"eventValue\"}, \"desc\": true},\n        ]\n\n    7.  Order by multiple dimensions and metrics:\n        [\n          {\"dimension\": {\"dimension_name\": \"eventName\", \"order_type\": 1}, \"desc\": false},\n          {\"dimension\": {\"dimension_name\": \"audienceId\", \"order_type\": 3}, \"desc\": false},\n          {\"metric\": {\"metric_name\": \"eventValue\"}, \"desc\": true},\n        ]\n\n    The dimensions and metrics in order_bys must also be present in the report\n    request's \"dimensions\" and \"metrics\" arguments, respectively.\n    \n\n",
       "inputSchema": {
+        "additionalProperties": false,
         "properties": {
           "dimension_filter": {
             "anyOf": [
@@ -353,13 +477,13 @@
               }
             ],
             "default": null,
-            "title": "Dimension Filter"
+            "description": "A Data API FilterExpression\n(https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/FilterExpression)\nto apply to the dimensions.  Don't use this for filtering metrics. Use\nmetric_filter instead. The `field_name` in a `dimension_filter` must\nbe a dimension, as defined in the `get_standard_dimensions` and\n`get_dimensions` tools.\nFor more information about the expected format of this argument, see\nthe `run_report_dimension_filter_hints` tool."
           },
           "dimensions": {
+            "description": "A list of dimensions to include in the report. Dimensions must be realtime dimensions.",
             "items": {
               "type": "string"
             },
-            "title": "Dimensions",
             "type": "array"
           },
           "limit": {
@@ -372,7 +496,7 @@
               }
             ],
             "default": null,
-            "title": "Limit"
+            "description": "The maximum number of rows to return in each response. Value must\nbe a positive integer <= 250,000. Used to paginate through large\nreports, following the guide at\nhttps://developers.google.com/analytics/devguides/reporting/data/v1/basics#pagination."
           },
           "metric_filter": {
             "anyOf": [
@@ -385,13 +509,13 @@
               }
             ],
             "default": null,
-            "title": "Metric Filter"
+            "description": "A Data API FilterExpression\n(https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/FilterExpression)\nto apply to the metrics.  Don't use this for filtering dimensions. Use\ndimension_filter instead. The `field_name` in a `metric_filter` must\nbe a metric, as defined in the `get_standard_metrics` and\n`get_metrics` tools.\nFor more information about the expected format of this argument, see\nthe `run_report_metric_filter_hints` tool."
           },
           "metrics": {
+            "description": "A list of metrics to include in the report. Metrics must be realtime metrics.",
             "items": {
               "type": "string"
             },
-            "title": "Metrics",
             "type": "array"
           },
           "offset": {
@@ -404,7 +528,7 @@
               }
             ],
             "default": null,
-            "title": "Offset"
+            "description": "The row count of the start row. The first row is counted as row\n0. Used to paginate through large\nreports, following the guide at\nhttps://developers.google.com/analytics/devguides/reporting/data/v1/basics#pagination."
           },
           "order_bys": {
             "anyOf": [
@@ -420,7 +544,7 @@
               }
             ],
             "default": null,
-            "title": "Order Bys"
+            "description": "A list of Data API OrderBy\n(https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/OrderBy)\nobjects to apply to the dimensions and metrics.\nFor more information about the expected format of this argument, see\nthe `run_report_order_bys_hints` tool."
           },
           "property_id": {
             "anyOf": [
@@ -431,11 +555,11 @@
                 "type": "string"
               }
             ],
-            "title": "Property Id"
+            "description": "The Google Analytics property ID. Accepted formats are:\n- A number\n- A string consisting of 'properties/' followed by a number"
           },
           "return_property_quota": {
             "default": false,
-            "title": "Return Property Quota",
+            "description": "Whether to return realtime property quota in the response.",
             "type": "boolean"
           }
         },
@@ -444,14 +568,24 @@
           "dimensions",
           "metrics"
         ],
-        "title": "run_realtime_reportParams",
         "type": "object"
       },
-      "name": "run_realtime_report"
+      "name": "run_realtime_report",
+      "outputSchema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Run Realtime Report"
     },
     {
+      "_meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      },
       "description": "\n          Runs a Google Analytics Data API report.\n\nNote that the reference docs at\nhttps://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta\nall use camelCase field names, but field names passed to this method should\nbe in snake_case since the tool is using the protocol buffers (protobuf)\nformat. The protocol buffers for the Data API are available at\nhttps://github.com/googleapis/googleapis/tree/master/google/analytics/data/v1beta.\n\nArgs:\n    property_id: The Google Analytics property ID. Accepted formats are:\n      - A number\n      - A string consisting of 'properties/' followed by a number\n    date_ranges: A list of date ranges\n      (https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/DateRange)\n      to include in the report.\n    dimensions: A list of dimensions to include in the report.\n    metrics: A list of metrics to include in the report.\n    dimension_filter: A Data API FilterExpression\n      (https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/FilterExpression)\n      to apply to the dimensions.  Don't use this for filtering metrics. Use\n      metric_filter instead. The `field_name` in a `dimension_filter` must\n      be a dimension, as defined in the `get_standard_dimensions` and\n      `get_dimensions` tools.\n    metric_filter: A Data API FilterExpression\n      (https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/FilterExpression)\n      to apply to the metrics.  Don't use this for filtering dimensions. Use\n      dimension_filter instead. The `field_name` in a `metric_filter` must\n      be a metric, as defined in the `get_standard_metrics` and\n      `get_metrics` tools.\n    order_bys: A list of Data API OrderBy\n      (https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/OrderBy)\n      objects to apply to the dimensions and metrics.\n    limit: The maximum number of rows to return in each response. Value must\n      be a positive integer <= 250,000. Used to paginate through large\n      reports, following the guide at\n      https://developers.google.com/analytics/devguides/reporting/data/v1/basics#pagination.\n    offset: The row count of the start row. The first row is counted as row\n      0. Used to paginate through large\n      reports, following the guide at\n      https://developers.google.com/analytics/devguides/reporting/data/v1/basics#pagination.\n    currency_code: The currency code to use for currency values. Must be in\n      ISO4217 format, such as \"AED\", \"USD\", \"JPY\". If the field is empty, the\n      report uses the property's default currency.\n    return_property_quota: Whether to return property quota in the response.\n\n\n          ## Hints for arguments\n\n          Here are some hints that outline the expected format and requirements\n          for arguments.\n\n          ### Hints for `dimensions`\n\n          The `dimensions` list must consist solely of either of the following:\n\n          1.  Standard dimensions defined in the HTML table at\n              https://developers.google.com/analytics/devguides/reporting/data/v1/api-schema#dimensions.\n              These dimensions are available to *every* property.\n          2.  Custom dimensions for the `property_id`. Use the\n              `get_custom_dimensions_and_metrics` tool to retrieve the list of\n              custom dimensions for a property.\n\n          ### Hints for `metrics`\n\n          The `metrics` list must consist solely of either of the following:\n\n          1.  Standard metrics defined in the HTML table at\n              https://developers.google.com/analytics/devguides/reporting/data/v1/api-schema#metrics.\n              These metrics are available to *every* property.\n          2.  Custom metrics for the `property_id`. Use the\n              `get_custom_dimensions_and_metrics` tool to retrieve the list of\n              custom metrics for a property.\n\n\n          ### Hints for `date_ranges`:\n          Example date_range arguments:\n      1. A single date range:\n\n        [ {\"start_date\": \"2025-01-01\", \"end_date\": \"2025-01-31\", \"name\": \"Jan2025\"} ]\n\n      2. A relative date range using 'yesterday' and 'today':\n        [ {\"start_date\": \"yesterday\", \"end_date\": \"today\", \"name\": \"YesterdayAndToday\"} ]\n\n      3. A relative date range using 'NdaysAgo' and 'today':\n        [ {\"start_date\": \"30daysAgo\", \"end_date\": \"yesterday\", \"name\": \"Previous30Days\"}]\n\n      4. Multiple date ranges:\n        [ {\"start_date\": \"2025-01-01\", \"end_date\": \"2025-01-31\", \"name\": \"Jan2025\"}, {\"start_date\": \"2025-02-01\", \"end_date\": \"2025-02-28\", \"name\": \"Feb2025\"} ]\n    \n\n          ### Hints for `dimension_filter`:\n          Example dimension_filter arguments:\n      1. A simple filter:\n        {\"filter\": {\"field_name\": \"eventName\", \"string_filter\": {\"match_type\": 2, \"value\": \"add\", \"case_sensitive\": false}}}\n\n      2. A NOT filter:\n        {\"not_expression\": {\"filter\": {\"field_name\": \"eventName\", \"string_filter\": {\"match_type\": 2, \"value\": \"add\", \"case_sensitive\": false}}}}\n\n      3. An empty value filter:\n        {\"filter\": {\"field_name\": \"source\", \"empty_filter\": {}}}\n\n      4. An AND group filter:\n        {\"and_group\": {\"expressions\": [{\"filter\": {\"field_name\": \"sourceMedium\", \"string_filter\": {\"match_type\": 1, \"value\": \"google / cpc\", \"case_sensitive\": false}}}, {\"filter\": {\"field_name\": \"eventName\", \"in_list_filter\": {\"values\": [\"first_visit\", \"purchase\", \"add_to_cart\"], \"case_sensitive\": true}}}]}}\n\n      5. An OR group filter:\n        {\"or_group\": {\"expressions\": [{\"filter\": {\"field_name\": \"sourceMedium\", \"string_filter\": {\"match_type\": 1, \"value\": \"google / cpc\", \"case_sensitive\": false}}}, {\"filter\": {\"field_name\": \"eventName\", \"in_list_filter\": {\"values\": [\"first_visit\", \"purchase\", \"add_to_cart\"], \"case_sensitive\": true}}}]}}\n\n    \n  Notes:\n    The API applies the `dimension_filter` and `metric_filter`\n    independently. As a result, some complex combinations of dimension and\n    metric filters are not possible in a single report request.\n\n    For example, you can't create a `dimension_filter` and `metric_filter`\n    combination for the following condition:\n\n    (\n      (eventName = \"page_view\" AND eventCount > 100)\n      OR\n      (eventName = \"join_group\" AND eventCount < 50)\n    )\n\n    This isn't possible because there's no way to apply the condition\n    \"eventCount > 100\" only to the data with eventName of \"page_view\", and\n    the condition \"eventCount < 50\" only to the data with eventName of\n    \"join_group\".\n\n    More generally, you can't define a `dimension_filter` and `metric_filter`\n    for:\n\n    (\n      ((dimension condition D1) AND (metric condition M1))\n      OR\n      ((dimension condition D2) AND (metric condition M2))\n    )\n\n    If you have complex conditions like this, either:\n\n    a)  Run a single report that applies a subset of the conditions that\n        the API supports as well as the data needed to perform filtering of the\n        API response on the client side. For example, for the condition:\n        (\n          (eventName = \"page_view\" AND eventCount > 100)\n          OR\n          (eventName = \"join_group\" AND eventCount < 50)\n        )\n        You could run a report that filters only on:\n        eventName one of \"page_view\" or \"join_group\"\n        and include the eventCount metric, then filter the API response on the\n        client side to apply the different metric filters for the different\n        events.\n\n    or\n\n    b)  Run a separate report for each combination of dimension condition and\n        metric condition. For the example above, you'd run one report for the\n        combination of (D1 AND M1), and another report for the combination of\n        (D2 AND M2).\n\n    Try to run fewer reports (option a) if possible. However, if running\n    fewer reports results in excessive quota usage for the API, use option\n    b. More information on quota usage is at\n    https://developers.google.com/analytics/blog/2023/data-api-quota-management.\n  \n\n          ### Hints for `metric_filter`:\n          Example metric_filter arguments:\n      1. A simple filter:\n        {\"filter\": {\"field_name\": \"eventCount\", \"numeric_filter\": {\"operation\": 4, \"value\": {\"int64_value\": \"10\"}}}}\n\n      2. A NOT filter:\n        {\"not_expression\": {\"filter\": {\"field_name\": \"eventCount\", \"numeric_filter\": {\"operation\": 4, \"value\": {\"int64_value\": \"10\"}}}}}\n\n      3. An empty value filter:\n        {\"filter\": {\"field_name\": \"purchaseRevenue\", \"empty_filter\": {}}}\n\n      4. An AND group filter:\n        {\"and_group\": {\"expressions\": [{\"filter\": {\"field_name\": \"eventCount\", \"numeric_filter\": {\"operation\": 4, \"value\": {\"int64_value\": \"10\"}}}}, {\"filter\": {\"field_name\": \"purchaseRevenue\", \"between_filter\": {\"from_value\": {\"double_value\": 10.0}, \"to_value\": {\"double_value\": 25.0}}}}]}}\n\n      5. An OR group filter:\n        {\"or_group\": {\"expressions\": [{\"filter\": {\"field_name\": \"eventCount\", \"numeric_filter\": {\"operation\": 4, \"value\": {\"int64_value\": \"10\"}}}}, {\"filter\": {\"field_name\": \"purchaseRevenue\", \"between_filter\": {\"from_value\": {\"double_value\": 10.0}, \"to_value\": {\"double_value\": 25.0}}}}]}}\n\n    \n  Notes:\n    The API applies the `dimension_filter` and `metric_filter`\n    independently. As a result, some complex combinations of dimension and\n    metric filters are not possible in a single report request.\n\n    For example, you can't create a `dimension_filter` and `metric_filter`\n    combination for the following condition:\n\n    (\n      (eventName = \"page_view\" AND eventCount > 100)\n      OR\n      (eventName = \"join_group\" AND eventCount < 50)\n    )\n\n    This isn't possible because there's no way to apply the condition\n    \"eventCount > 100\" only to the data with eventName of \"page_view\", and\n    the condition \"eventCount < 50\" only to the data with eventName of\n    \"join_group\".\n\n    More generally, you can't define a `dimension_filter` and `metric_filter`\n    for:\n\n    (\n      ((dimension condition D1) AND (metric condition M1))\n      OR\n      ((dimension condition D2) AND (metric condition M2))\n    )\n\n    If you have complex conditions like this, either:\n\n    a)  Run a single report that applies a subset of the conditions that\n        the API supports as well as the data needed to perform filtering of the\n        API response on the client side. For example, for the condition:\n        (\n          (eventName = \"page_view\" AND eventCount > 100)\n          OR\n          (eventName = \"join_group\" AND eventCount < 50)\n        )\n        You could run a report that filters only on:\n        eventName one of \"page_view\" or \"join_group\"\n        and include the eventCount metric, then filter the API response on the\n        client side to apply the different metric filters for the different\n        events.\n\n    or\n\n    b)  Run a separate report for each combination of dimension condition and\n        metric condition. For the example above, you'd run one report for the\n        combination of (D1 AND M1), and another report for the combination of\n        (D2 AND M2).\n\n    Try to run fewer reports (option a) if possible. However, if running\n    fewer reports results in excessive quota usage for the API, use option\n    b. More information on quota usage is at\n    https://developers.google.com/analytics/blog/2023/data-api-quota-management.\n  \n\n          ### Hints for `order_bys`:\n          Example order_bys arguments:\n\n    1.  Order by ascending 'eventName':\n        [ {\"dimension\": {\"dimension_name\": \"eventName\", \"order_type\": 1}, \"desc\": false} ]\n\n    2.  Order by descending 'eventName', ignoring case:\n        [ {\"dimension\": {\"dimension_name\": \"campaignName\", \"order_type\": 2}, \"desc\": true} ]\n\n    3.  Order by ascending 'audienceId':\n        [ {\"dimension\": {\"dimension_name\": \"audienceId\", \"order_type\": 3}, \"desc\": false} ]\n\n    4.  Order by descending 'eventCount':\n        [ {\"metric\": {\"metric_name\": \"eventValue\"}, \"desc\": true} ]\n\n    5.  Order by ascending 'eventCount':\n        [ {\"metric\": {\"metric_name\": \"eventCount\"}, \"desc\": false} ]\n\n    6.  Combination of dimension and metric order bys:\n        [\n          {\"dimension\": {\"dimension_name\": \"eventName\", \"order_type\": 1}, \"desc\": false},\n          {\"metric\": {\"metric_name\": \"eventValue\"}, \"desc\": true},\n        ]\n\n    7.  Order by multiple dimensions and metrics:\n        [\n          {\"dimension\": {\"dimension_name\": \"eventName\", \"order_type\": 1}, \"desc\": false},\n          {\"dimension\": {\"dimension_name\": \"audienceId\", \"order_type\": 3}, \"desc\": false},\n          {\"metric\": {\"metric_name\": \"eventValue\"}, \"desc\": true},\n        ]\n\n    The dimensions and metrics in order_bys must also be present in the report\n    request's \"dimensions\" and \"metrics\" arguments, respectively.\n    \n\n          ",
       "inputSchema": {
+        "additionalProperties": false,
         "properties": {
           "currency_code": {
             "anyOf": [
@@ -463,14 +597,14 @@
               }
             ],
             "default": null,
-            "title": "Currency Code"
+            "description": "The currency code to use for currency values. Must be in\nISO4217 format, such as \"AED\", \"USD\", \"JPY\". If the field is empty, the\nreport uses the property's default currency."
           },
           "date_ranges": {
+            "description": "A list of date ranges\n(https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/DateRange)\nto include in the report.",
             "items": {
               "additionalProperties": true,
               "type": "object"
             },
-            "title": "Date Ranges",
             "type": "array"
           },
           "dimension_filter": {
@@ -484,13 +618,13 @@
               }
             ],
             "default": null,
-            "title": "Dimension Filter"
+            "description": "A Data API FilterExpression\n(https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/FilterExpression)\nto apply to the dimensions.  Don't use this for filtering metrics. Use\nmetric_filter instead. The `field_name` in a `dimension_filter` must\nbe a dimension, as defined in the `get_standard_dimensions` and\n`get_dimensions` tools."
           },
           "dimensions": {
+            "description": "A list of dimensions to include in the report.",
             "items": {
               "type": "string"
             },
-            "title": "Dimensions",
             "type": "array"
           },
           "limit": {
@@ -503,7 +637,7 @@
               }
             ],
             "default": null,
-            "title": "Limit"
+            "description": "The maximum number of rows to return in each response. Value must\nbe a positive integer <= 250,000. Used to paginate through large\nreports, following the guide at\nhttps://developers.google.com/analytics/devguides/reporting/data/v1/basics#pagination."
           },
           "metric_filter": {
             "anyOf": [
@@ -516,13 +650,13 @@
               }
             ],
             "default": null,
-            "title": "Metric Filter"
+            "description": "A Data API FilterExpression\n(https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/FilterExpression)\nto apply to the metrics.  Don't use this for filtering dimensions. Use\ndimension_filter instead. The `field_name` in a `metric_filter` must\nbe a metric, as defined in the `get_standard_metrics` and\n`get_metrics` tools."
           },
           "metrics": {
+            "description": "A list of metrics to include in the report.",
             "items": {
               "type": "string"
             },
-            "title": "Metrics",
             "type": "array"
           },
           "offset": {
@@ -535,7 +669,7 @@
               }
             ],
             "default": null,
-            "title": "Offset"
+            "description": "The row count of the start row. The first row is counted as row\n0. Used to paginate through large\nreports, following the guide at\nhttps://developers.google.com/analytics/devguides/reporting/data/v1/basics#pagination."
           },
           "order_bys": {
             "anyOf": [
@@ -551,7 +685,7 @@
               }
             ],
             "default": null,
-            "title": "Order Bys"
+            "description": "A list of Data API OrderBy\n(https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/OrderBy)\nobjects to apply to the dimensions and metrics."
           },
           "property_id": {
             "anyOf": [
@@ -562,11 +696,11 @@
                 "type": "string"
               }
             ],
-            "title": "Property Id"
+            "description": "The Google Analytics property ID. Accepted formats are:\n- A number\n- A string consisting of 'properties/' followed by a number"
           },
           "return_property_quota": {
             "default": false,
-            "title": "Return Property Quota",
+            "description": "Whether to return property quota in the response.",
             "type": "boolean"
           }
         },
@@ -576,10 +710,14 @@
           "dimensions",
           "metrics"
         ],
-        "title": "run_reportParams",
         "type": "object"
       },
-      "name": "run_report"
+      "name": "run_report",
+      "outputSchema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Run Report"
     }
   ]
 }

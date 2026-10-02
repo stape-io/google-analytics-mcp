@@ -1,7 +1,7 @@
 # MCP Server for Google Analytics 4
 [![Trust Score](https://archestra.ai/mcp-catalog/api/badge/quality/stape-io/google-analytics-mcp)](https://archestra.ai/mcp-catalog/stape-io__google-analytics-mcp)
 
-An interface to the Google Analytics 4 Admin and Data APIs over MCP, in two flavours: a hosted server with Google OAuth built in, and a local CLI that runs on your own credentials.
+A hosted MCP server for the Google Analytics 4 Admin and Data APIs, with Google OAuth built in.
 
 ## Table of Contents
 
@@ -43,24 +43,16 @@ Every reporting tool also accepts optional filters, sort orders, pagination, and
 
 ## Installation
 
-This server comes in two flavours: Hosted server and Local CLI. Both give you the same 9 tools; the difference is who handles Google auth.
-
-| | Hosted server | Local CLI |
-| --- | --- | --- |
-| Auth | Google OAuth in your browser, handled for you | You supply a service account key via `GOOGLE_APPLICATION_CREDENTIALS` |
-| Data | Passes through `mcp-google-analytics.stape.io` | Only ever leaves your machine |
-| Setup | None | Set two environment variables |
-
-Pick your client below. The hosted server needs the [`mcp-remote`](https://github.com/geelen/mcp-remote#readme) bridge on clients whose MCP support doesn't complete Google's OAuth flow natively; where a client does that itself, it connects straight to `https://mcp-google-analytics.stape.io/mcp`.
+Pick your client below. This server needs the [`mcp-remote`](https://github.com/geelen/mcp-remote#readme) bridge on clients whose MCP support doesn't complete Google's OAuth flow natively; where a client does that itself, it connects straight to `https://mcp-google-analytics.stape.io/mcp`.
 
 ### Claude Desktop
 
 <details>
 <summary>⬇️ Click to expand ⬇️</summary>
 
-**Hosted server** — Claude Desktop connects to remote HTTP MCP servers natively, no bridge needed. Go to Settings → Connectors → Add custom connector, set the name to `ga4-mcp-server` and the URL to `https://mcp-google-analytics.stape.io/mcp`, then save. Click the new connector to complete the Google OAuth flow in the browser window that opens.
+Claude Desktop connects to remote HTTP MCP servers natively, no bridge needed. Go to Settings → Connectors → Add custom connector, set the name to `ga4-mcp-server` and the URL to `https://mcp-google-analytics.stape.io/mcp`, then save. Click the new connector to complete the Google OAuth flow in the browser window that opens.
 
-> `mcp-remote` is also possible for the hosted server, for anyone who'd rather configure it through the JSON config file (Settings -> Developer -> Edit Config) instead of the Connectors UI — less recommended, but still supported:
+> `mcp-remote` is also possible, for anyone who'd rather configure it through the JSON config file (Settings -> Developer -> Edit Config) instead of the Connectors UI — less recommended, but still supported:
 >
 > ```json
 > {
@@ -77,23 +69,6 @@ Pick your client below. The hosted server needs the [`mcp-remote`](https://githu
 > }
 > ```
 
-**Local CLI** — no OAuth flow, no data through anyone else's server, you supply your own Google Cloud service account. Open Settings -> Developer -> Edit Config and add:
-
-```json
-{
-  "mcpServers": {
-    "ga4-mcp-server": {
-      "command": "pipx",
-      "args": ["run", "analytics-mcp"],
-      "env": {
-        "GOOGLE_APPLICATION_CREDENTIALS": "PATH_TO_CREDENTIALS_JSON",
-        "GOOGLE_PROJECT_ID": "YOUR_PROJECT_ID"
-      }
-    }
-  }
-}
-```
-
 </details>
 
 ### Claude Code
@@ -101,23 +76,13 @@ Pick your client below. The hosted server needs the [`mcp-remote`](https://githu
 <details>
 <summary>⬇️ Click to expand ⬇️</summary>
 
-Claude Code speaks HTTP directly, including the OAuth handshake, so the hosted server needs no bridge.
-
-**Hosted server**:
+Claude Code speaks HTTP directly, including the OAuth handshake, so no bridge is needed:
 
 ```bash
 claude mcp add --transport http ga4-mcp-server https://mcp-google-analytics.stape.io/mcp
 ```
 
-A browser window opens for the Google OAuth flow the first time a tool is used. Run `/mcp` inside Claude Code to confirm it connected.
-
-**Local CLI**:
-
-```bash
-claude mcp add ga4-mcp-server -e GOOGLE_APPLICATION_CREDENTIALS='PATH_TO_CREDENTIALS_JSON' -e GOOGLE_PROJECT_ID='YOUR_PROJECT_ID' -- pipx run analytics-mcp
-```
-
-Both write into `.mcp.json` / your Claude Code MCP config.
+A browser window opens for the Google OAuth flow the first time a tool is used. Run `/mcp` inside Claude Code to confirm it connected. This writes into `.mcp.json` / your Claude Code MCP config.
 
 </details>
 
@@ -128,32 +93,12 @@ Both write into `.mcp.json` / your Claude Code MCP config.
 
 VS Code's MCP client supports HTTP servers and their OAuth flow natively, no `mcp-remote` needed. Add this to `.vscode/mcp.json`:
 
-**Hosted server**:
-
 ```json
 {
   "servers": {
     "ga4-mcp-server": {
       "type": "http",
       "url": "https://mcp-google-analytics.stape.io/mcp"
-    }
-  }
-}
-```
-
-**Local CLI**:
-
-```json
-{
-  "servers": {
-    "ga4-mcp-server": {
-      "type": "stdio",
-      "command": "pipx",
-      "args": ["run", "analytics-mcp"],
-      "env": {
-        "GOOGLE_APPLICATION_CREDENTIALS": "PATH_TO_CREDENTIALS_JSON",
-        "GOOGLE_PROJECT_ID": "YOUR_PROJECT_ID"
-      }
     }
   }
 }
@@ -177,31 +122,12 @@ GitHub Copilot Chat in VS Code uses VS Code's own MCP client, so it reads the sa
 
 Copilot CLI also completes OAuth natively for remote HTTP servers. Add this to `~/.copilot/mcp-config.json`:
 
-**Hosted server**:
-
 ```json
 {
   "mcpServers": {
     "ga4-mcp-server": {
       "type": "http",
       "url": "https://mcp-google-analytics.stape.io/mcp"
-    }
-  }
-}
-```
-
-**Local CLI**:
-
-```json
-{
-  "mcpServers": {
-    "ga4-mcp-server": {
-      "command": "pipx",
-      "args": ["run", "analytics-mcp"],
-      "env": {
-        "GOOGLE_APPLICATION_CREDENTIALS": "PATH_TO_CREDENTIALS_JSON",
-        "GOOGLE_PROJECT_ID": "YOUR_PROJECT_ID"
-      }
     }
   }
 }
@@ -218,8 +144,6 @@ See [GitHub's docs](https://docs.github.com/en/copilot/how-tos/copilot-cli/custo
 
 Cursor speaks HTTP directly too, no `mcp-remote` needed. Add this to `.cursor/mcp.json` (project-level) or `~/.cursor/mcp.json` (global — Settings → MCP → Add new global MCP server):
 
-**Hosted server**:
-
 ```json
 {
   "mcpServers": {
@@ -232,23 +156,6 @@ Cursor speaks HTTP directly too, no `mcp-remote` needed. Add this to `.cursor/mc
 
 A browser window opens for the Google OAuth flow the first time a tool is used.
 
-**Local CLI**:
-
-```json
-{
-  "mcpServers": {
-    "ga4-mcp-server": {
-      "command": "pipx",
-      "args": ["run", "analytics-mcp"],
-      "env": {
-        "GOOGLE_APPLICATION_CREDENTIALS": "PATH_TO_CREDENTIALS_JSON",
-        "GOOGLE_PROJECT_ID": "YOUR_PROJECT_ID"
-      }
-    }
-  }
-}
-```
-
 </details>
 
 ### Antigravity
@@ -256,9 +163,7 @@ A browser window opens for the Google OAuth flow the first time a tool is used.
 <details>
 <summary>⬇️ Click to expand ⬇️</summary>
 
-Antigravity's own OAuth support for remote HTTP servers doesn't reliably reach a token to the server yet ([antigravity-cli#25](https://github.com/google-antigravity/antigravity-cli/issues/25)), so use `mcp-remote` for the hosted server here too. Add this to `~/.gemini/config/mcp_config.json` (global) or `.agents/mcp_config.json` (workspace-local) — accessible from the editor's agent panel via **… → MCP Servers → Manage MCP Servers → View raw config**:
-
-**Hosted server**:
+Antigravity's own OAuth support for remote HTTP servers doesn't reliably reach a token to the server yet ([antigravity-cli#25](https://github.com/google-antigravity/antigravity-cli/issues/25)), so use `mcp-remote` here too. Add this to `~/.gemini/config/mcp_config.json` (global) or `.agents/mcp_config.json` (workspace-local) — accessible from the editor's agent panel via **… → MCP Servers → Manage MCP Servers → View raw config**:
 
 ```json
 {
@@ -270,23 +175,6 @@ Antigravity's own OAuth support for remote HTTP servers doesn't reliably reach a
         "mcp-remote",
         "https://mcp-google-analytics.stape.io/mcp"
       ]
-    }
-  }
-}
-```
-
-**Local CLI**:
-
-```json
-{
-  "mcpServers": {
-    "ga4-mcp-server": {
-      "command": "pipx",
-      "args": ["run", "analytics-mcp"],
-      "env": {
-        "GOOGLE_APPLICATION_CREDENTIALS": "PATH_TO_CREDENTIALS_JSON",
-        "GOOGLE_PROJECT_ID": "YOUR_PROJECT_ID"
-      }
     }
   }
 }
@@ -303,7 +191,7 @@ Antigravity's own OAuth support for remote HTTP servers doesn't reliably reach a
 2. Go to Settings → Connectors → Create, and set the server URL to `https://mcp-google-analytics.stape.io/mcp`.
 3. Set Authentication to **OAuth** and complete the Google login in the browser window that opens.
 
-ChatGPT only reaches servers over the public internet, it can't spawn a local process — so there's no Local CLI option here, only the hosted server.
+ChatGPT only reaches servers over the public internet, it can't spawn a local process.
 
 </details>
 
@@ -312,7 +200,7 @@ ChatGPT only reaches servers over the public internet, it can't spawn a local pr
 <details>
 <summary>⬇️ Click to expand ⬇️</summary>
 
-Any other MCP-compatible client that expects a stdio-style `command`/`args` config can use the same `mcp-remote` block for the hosted server:
+Any other MCP-compatible client that expects a stdio-style `command`/`args` config can use the same `mcp-remote` block:
 
 ```json
 {
@@ -324,23 +212,6 @@ Any other MCP-compatible client that expects a stdio-style `command`/`args` conf
         "mcp-remote",
         "https://mcp-google-analytics.stape.io/mcp"
       ]
-    }
-  }
-}
-```
-
-Or the local CLI directly, with your own credentials:
-
-```json
-{
-  "mcpServers": {
-    "ga4-mcp-server": {
-      "command": "pipx",
-      "args": ["run", "analytics-mcp"],
-      "env": {
-        "GOOGLE_APPLICATION_CREDENTIALS": "PATH_TO_CREDENTIALS_JSON",
-        "GOOGLE_PROJECT_ID": "YOUR_PROJECT_ID"
-      }
     }
   }
 }
@@ -375,18 +246,20 @@ cd google-analytics-mcp
 uv sync --all-extras
 ```
 
-Requires Python 3.10+. To test changes by issuing prompts in Gemini, point the `analytics-mcp` entry in your `~/.gemini/settings.json` at your local checkout:
+Requires Python 3.11+. To test changes by issuing prompts in Gemini, point the `analytics-mcp` entry in your `~/.gemini/settings.json` at your local checkout:
 
 ```json
 "command": "PATH_TO_REPO/.venv/bin/analytics-mcp"
 ```
 
-Then run `gemini --debug` so Gemini prints debug output as it processes prompts.
+Then run `gemini --debug` so Gemini prints debug output as it processes prompts. This local stdio server has no OAuth flow of its own — it authenticates via `google.auth.default()`, the same as the hosted server's own local dev fallback — so leave `GOOGLE_ANALYTICS_MCP_AUTH_PROVIDER` unset in your environment; setting it would make the local server try to build a real OAuth provider too.
 
 ```bash
 nox -s format   # applies black formatting (80-char line width)
 nox -s lint     # checks formatting only, fails on drift
 nox -s tests    # unit tests across supported Python versions
+ruff check .    # lint
+mypy            # type check
 ```
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the CLA and pull request process.
