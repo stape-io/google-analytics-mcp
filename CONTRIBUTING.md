@@ -32,7 +32,8 @@ Guidelines](https://opensource.google.com/conduct/).
 This library conforms to [PEP 8](https://www.python.org/dev/peps/pep-0008/)
 style guidelines and enforces an 80 character line width. It's recommended that
 any contributor run the auto-formatter [`black`](https://github.com/psf/black).
-To get started, first install `nox` and `black`:
+To get started, first install `nox`, `black` and `uv` (the test session uses `uv` to install
+the locked dependencies):
 
 ```
 pip install -e ".[dev]"
