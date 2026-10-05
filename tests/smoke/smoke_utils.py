@@ -22,6 +22,7 @@ should be the server's own.
 import contextlib
 import json
 import os
+import re
 import subprocess
 import sys
 import typing
@@ -139,4 +140,14 @@ def get_http_tools_list() -> dict[str, Any]:
 
 def normalize(payload: dict[str, Any]) -> str:
     payload["tools"].sort(key=lambda t: t.get("name", ""))
+    for tool in payload["tools"]:
+        # The reporting tools' descriptions embed `func.__doc__` in an
+        # f-string. Python 3.13+ strips docstring indentation at compile
+        # time and <=3.12 does not, so the raw text differs by interpreter
+        # even with identical dependencies. Drop leading whitespace per line
+        # so goldens compare equal on every supported Python.
+        if "description" in tool:
+            tool["description"] = re.sub(
+                r"(?m)^[ \t]+", "", tool["description"]
+            )
     return json.dumps(payload, indent=2, sort_keys=True) + "\n"
