@@ -39,5 +39,7 @@ jobs:
     - name: Run tests
       run: nox -s tests-${{ matrix.python-version }}
     - name: Run wire smoke tests
+      # Run from uv.lock: the goldens are byte-exact, so unpinned dependency
+      # resolution would make them drift on unrelated PRs.
       if: matrix.python-version == '3.14'
-      run: python -m unittest tests/smoke/smoke_test.py
+      run: uv run --frozen python -m unittest tests/smoke/smoke_test.py
