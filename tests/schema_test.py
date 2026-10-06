@@ -106,15 +106,28 @@ def fastmcp_tools() -> dict[str, dict]:
 
 
 def adk_tools() -> dict[str, dict]:
-    """name -> tool dict on the pre-upgrade stdio path. Retires with coordinator."""
+    """name -> RAW ADK tool dict. Retires with coordinator.
+
+    Deliberately not coordinator.mcp_tools: the fixup loop in coordinator.py
+    mutates those at import, so asserting on them would only check the
+    fixups' own output and could never fail. Converting coordinator.tools
+    again gives fresh, unpatched objects.
+    """
     # Deliberately imports a module this same migration deletes: only ever
     # called from tests gated behind `skipUnless(HAS_COORDINATOR, ...)`, so
     # it's dead code post-upgrade, not a live import mypy can resolve.
     import analytics_mcp.coordinator as coordinator  # type: ignore[import-not-found]
 
+    # unused-ignore: google-adk is installed pre-upgrade (mypy resolves the
+    # import) and absent post-upgrade (import-untyped from the `google`
+    # namespace package), so the ignore is only needed on one side.
+    from google.adk.tools.mcp_tool.conversion_utils import (  # type: ignore[import-untyped,unused-ignore]
+        adk_to_mcp_tool_type,
+    )
+
     return {
         t.name: t.model_dump(mode="json", exclude_none=True, by_alias=True)
-        for t in coordinator.mcp_tools
+        for t in (adk_to_mcp_tool_type(x) for x in coordinator.tools)
     }
 
 

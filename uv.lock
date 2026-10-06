@@ -45,6 +45,7 @@ dev = [
     { name = "mypy" },
     { name = "nox" },
     { name = "ruff" },
+    { name = "uv" },
 ]
 redis = [
     { name = "redis", extra = ["hiredis"] },
@@ -68,6 +69,7 @@ requires-dist = [
     { name = "redis", extras = ["hiredis"], marker = "extra == 'redis'", specifier = ">=7.4.0" },
     { name = "ruff", marker = "extra == 'dev'", specifier = "==0.16.8" },
     { name = "starlette", specifier = ">=0.52.1" },
+    { name = "uv", marker = "extra == 'dev'", specifier = ">=0.8" },
 ]
 provides-extras = ["dev", "redis"]
 
