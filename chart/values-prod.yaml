@@ -1,13 +1,12 @@
 onePasswordSecrets:
-  vault: 'google-analytics-mcp'
-  manualItem: 'google-analytics-mcp_production-manual'
-
+  vault: google-analytics-mcp
+  manualItem: google-analytics-mcp_production-manual
 autoscaling:
   enabled: true
 host: mcp-google-analytics.stape.io
 image:
   repository: europe-west1-docker.pkg.dev/stape-production/stape/google-analytics-mcp
-  tag: 74a3031-37467069163-1
+  tag: c03ec8e-37826125212-1
 resources:
   requests:
     cpu: 80m
