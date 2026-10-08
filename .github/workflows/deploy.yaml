@@ -9,7 +9,7 @@ env:
   GCP_PROJECT_ID: stape-development
   GCP_PROJECT_NUMBER: 664050025753
   REGISTRY: europe-west1-docker.pkg.dev
-  REPOSITORY: stape-development/stape/mcp-ga
+  REPOSITORY: stape-development/stape/google-analytics-mcp
 
 jobs:
   generate-image-tag:
@@ -50,64 +50,11 @@ jobs:
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:${{ needs.generate-image-tag.outputs.image_tag }}
 
-  update-k8s-secret:
-    name: Update Kubernetes Secret
-    needs:
-      - build-and-push-image
-    runs-on: ubuntu-latest
-    permissions: write-all
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-
-      - name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v3
-        with:
-          workload_identity_provider: projects/${{ env.GCP_PROJECT_NUMBER }}/locations/global/workloadIdentityPools/github/providers/stape-io
-          service_account: github-actions@${{ env.GCP_PROJECT_ID }}.iam.gserviceaccount.com
-
-      - name: Get GKE credentials
-        uses: google-github-actions/get-gke-credentials@v3
-        with:
-          project_id: ${{ env.GCP_PROJECT_ID }}
-          cluster_name: ${{ secrets.GKE_CLUSTER_DEV }}
-          location: ${{ secrets.GKE_LOCATION_DEV }}
-
-      - name: Install jq
-        run: sudo apt-get update && sudo apt-get install -y jq
-
-      - name: Install 1Password CLI
-        uses: 1password/install-cli-action@v1
-
-      - name: Update Kubernetes Secret
-        env:
-          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
-        run: |
-          item_json=$(op item get env.dev --vault google-analytics-mcp-dev --format json)
-
-          printf '%s' "$item_json" | jq -r '
-            [ .fields[]? | select(.label != "notesPlain" and .value != null and .value != "") | "\(.label)=\(.value)" ] as $pairs
-            | if ($pairs | length) > 0 then
-                $pairs[]
-              else
-                (.fields[]? | select(.label == "notesPlain") | .value // empty)
-              end
-          ' > .env.local
-
-          test -s .env.local
-
-          kubectl create namespace mcp-ga-dev --dry-run=client -o yaml | kubectl apply -f -
-          kubectl create secret generic mcp-ga-dev \
-            --namespace mcp-ga-dev \
-            --dry-run=client \
-            --from-env-file=.env.local \
-            -o yaml | kubectl apply -f -
-
   update-image-tag:
     name: Update Image Tag
     needs:
       - generate-image-tag
-      - update-k8s-secret
+      - build-and-push-image
     runs-on: ubuntu-latest
     permissions: write-all
     steps:
