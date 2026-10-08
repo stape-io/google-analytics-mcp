@@ -62,6 +62,12 @@ spec:
                 secretKeyRef:
                   name: {{ .Release.Name }}
                   key: GOOGLE_ANALYTICS_MCP_AUTH_STORAGE_ENCRYPTION_KEY
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 5
+            failureThreshold: 24
           livenessProbe:
             httpGet:
               path: /healthz
