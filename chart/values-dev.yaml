@@ -1,8 +1,7 @@
 onePasswordSecrets:
-  vault: 'google-analytics-mcp-dev'
-  manualItem: 'google-analytics-mcp_dev-manual'
-
+  vault: google-analytics-mcp-dev
+  manualItem: google-analytics-mcp_dev-manual
 host: mcp-google-analytics.stape.dev
 image:
   repository: europe-west1-docker.pkg.dev/stape-development/stape/google-analytics-mcp
-  tag: b45d2ae-35360488933-1
+  tag: 2c1e4f5-37824527726-1
