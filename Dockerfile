@@ -17,4 +17,8 @@ RUN uv sync --extra redis --no-dev
 
 EXPOSE 8000
 
-CMD ["uv", "run", "uvicorn", "server:app", "--host", "0.0.0.0", "--port", "8000"]
+# Run the venv directly: `uv run` re-validates the lock and env on every boot,
+# which costs ~0.7s CPU and slows startup under low CPU requests.
+ENV PATH="/app/.venv/bin:$PATH"
+
+CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "8000"]
