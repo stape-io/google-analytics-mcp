@@ -6,7 +6,7 @@ autoscaling:
 host: mcp-google-analytics.stape.io
 image:
   repository: europe-west1-docker.pkg.dev/stape-production/stape/google-analytics-mcp
-  tag: 63f66b9-37910075842-1
+  tag: 278941a-37933495774-1
 resources:
   requests:
     cpu: 150m
