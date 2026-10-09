@@ -9,5 +9,5 @@ image:
   tag: c03ec8e-37826125212-1
 resources:
   requests:
-    cpu: 80m
+    cpu: 150m
     memory: 400Mi
