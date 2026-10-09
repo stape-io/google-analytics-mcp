@@ -1,5 +1,5 @@
 apiVersion: v2
-name: mcp-ga
+name: google-analytics-mcp
 description: A Helm chart for deploying Google Analytics MCP server with Google OAuth or remote auth provider
 type: application
 version: 0.1.0

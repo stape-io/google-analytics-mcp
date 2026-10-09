@@ -33,12 +33,12 @@ spec:
             - name: GOOGLE_ANALYTICS_MCP_OAUTH_CLIENT_ID
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Release.Name }}
+                  name: {{ .Release.Name }}-manual
                   key: GOOGLE_ANALYTICS_MCP_OAUTH_CLIENT_ID
             - name: GOOGLE_ANALYTICS_MCP_OAUTH_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Release.Name }}
+                  name: {{ .Release.Name }}-manual
                   key: GOOGLE_ANALYTICS_MCP_OAUTH_CLIENT_SECRET
             - name: GOOGLE_ANALYTICS_MCP_OAUTH_REQUIRE_AUTHORIZATION_CONSENT
               value: "external"
@@ -47,7 +47,7 @@ spec:
             - name: GOOGLE_ANALYTICS_MCP_OAUTH_JWT_SIGNING_KEY
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Release.Name }}
+                  name: {{ .Release.Name }}-manual
                   key: GOOGLE_ANALYTICS_MCP_OAUTH_JWT_SIGNING_KEY
             # Auth storage
             - name: GOOGLE_ANALYTICS_MCP_AUTH_STORAGE_TYPE
@@ -55,12 +55,12 @@ spec:
             - name: GOOGLE_ANALYTICS_MCP_AUTH_STORAGE_REDIS_URL
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Release.Name }}
+                  name: {{ .Release.Name }}-manual
                   key: GOOGLE_ANALYTICS_MCP_AUTH_STORAGE_REDIS_URL
             - name: GOOGLE_ANALYTICS_MCP_AUTH_STORAGE_ENCRYPTION_KEY
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Release.Name }}
+                  name: {{ .Release.Name }}-manual
                   key: GOOGLE_ANALYTICS_MCP_AUTH_STORAGE_ENCRYPTION_KEY
           livenessProbe:
             httpGet:
