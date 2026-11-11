@@ -1,0 +1,38 @@
+{{- /*
+VerticalPodAutoscaler for the app container. With the HPA on (it scales on CPU), VPA controls memory
+only; without it, cpu and memory. RequestsOnly keeps the limits as they are, and maxAllowed follows
+each limit; vpa.<container>.maxCpu/maxMemory stand in where a container has no such limit.
+Rendered only where the cluster has the VPA API (GKE: verticalPodAutoscaling.enabled).
+*/ -}}
+{{- if and .Values.vpa.enabled (.Capabilities.APIVersions.Has "autoscaling.k8s.io/v1") }}
+{{- $cpu := not .Values.autoscaling.enabled }}
+{{- $mainLimits := .Values.resources.limits | default dict }}
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app.kubernetes.io/name: {{ .Release.Name }}
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Release.Name }}
+  updatePolicy:
+    updateMode: {{ .Values.vpa.updateMode | quote }}
+  resourcePolicy:
+    containerPolicies:
+      - containerName: {{ .Chart.Name }}
+        controlledResources: {{ ternary (list "cpu" "memory") (list "memory") $cpu | toJson }}
+        controlledValues: RequestsOnly
+        minAllowed:
+          {{- if $cpu }}
+          cpu: {{ .Values.vpa.minCpu }}
+          {{- end }}
+          memory: {{ .Values.vpa.main.minMemory }}
+        maxAllowed:
+          {{- if $cpu }}
+          cpu: {{ $mainLimits.cpu | default .Values.vpa.main.maxCpu | required "vpa.main.maxCpu is required: main has no cpu limit" }}
+          {{- end }}
+          memory: {{ $mainLimits.memory | default .Values.vpa.main.maxMemory | required "vpa.main.maxMemory is required: main has no memory limit" }}
+{{- end }}

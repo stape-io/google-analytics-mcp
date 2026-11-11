@@ -11,6 +11,14 @@ resources:
 autoscaling:
   enabled: false
 
+# VerticalPodAutoscaler (templates/vpa.yaml). Off here: each env file turns it on with its own
+# bounds, because dev and prod usage differ.
+vpa:
+  enabled: false
+  # Resizes running pods; falls back to evict+recreate if in-place is impossible.
+  updateMode: InPlaceOrRecreate
+  minCpu: 10m
+
 # Items named in full: a rename in 1Password then fails loudly instead of
 # yielding a Secret with no fields. See templates/onepassword-items.yaml.
 onePasswordSecrets:
