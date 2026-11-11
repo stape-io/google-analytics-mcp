@@ -4,11 +4,7 @@ onePasswordSecrets:
 host: mcp-google-analytics.stape.dev
 image:
   repository: europe-west1-docker.pkg.dev/stape-development/stape/google-analytics-mcp
-  tag: 496ee4f-37932299572-1
-
-# VerticalPodAutoscaler, iris 7d peak on dev (OPS-2603): 3m / 157Mi against a 10m / 200Mi request.
-# minMemory is half the request; there are no limits, so maxCpu and maxMemory stand in for them
-# (memory: twice the 7d peak).
+  tag: 89df388-43046110952-1
 vpa:
   enabled: true
   main:
