@@ -4,4 +4,10 @@ onePasswordSecrets:
 host: mcp-google-analytics.stape.dev
 image:
   repository: europe-west1-docker.pkg.dev/stape-development/stape/google-analytics-mcp
-  tag: 496ee4f-37932299572-1
+  tag: d7493cc-43079213066-1
+vpa:
+  enabled: true
+  main:
+    minMemory: 64Mi
+    maxCpu: 500m
+    maxMemory: 512Mi
