@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "google-analytics-mcp.labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
+  {{- if not .Values.hpa.enabled }}
   replicas: 1
   {{- end }}
   selector:

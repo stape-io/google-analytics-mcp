@@ -5,9 +5,14 @@ host: mcp-google-analytics.stape.dev
 image:
   repository: europe-west1-docker.pkg.dev/stape-development/stape/google-analytics-mcp
   tag: d7493cc-43079213066-1
+
+# iris 7d peak 175m / 157Mi. minAllowed memory: request / 2 rounded down to a power of 2;
+# maxAllowed (no limits): cpu peak x2 rounded up to 100m, memory peak x2 rounded up to a power of 2
 vpa:
-  enabled: true
-  main:
-    minMemory: 64Mi
-    maxCpu: 500m
-    maxMemory: 512Mi
+  controlledResources: ["cpu", "memory"]
+  minAllowed:
+    cpu: 10m
+    memory: 64Mi
+  maxAllowed:
+    cpu: 400m
+    memory: 512Mi
