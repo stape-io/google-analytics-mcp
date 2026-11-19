@@ -1,0 +1,24 @@
+{{- if and .Values.vpa.enabled (.Capabilities.APIVersions.Has "autoscaling.k8s.io/v1") }}
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app.kubernetes.io/name: {{ .Release.Name }}
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Release.Name }}
+  updatePolicy:
+    updateMode: {{ .Values.vpa.updateMode | quote }}
+  resourcePolicy:
+    containerPolicies:
+      - containerName: {{ .Chart.Name }}
+        controlledResources: {{ .Values.vpa.controlledResources | toJson }}
+        controlledValues: RequestsOnly
+        minAllowed:
+          {{- toYaml .Values.vpa.minAllowed | nindent 10 }}
+        maxAllowed:
+          {{- toYaml .Values.vpa.maxAllowed | nindent 10 }}
+{{- end }}

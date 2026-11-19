@@ -1,7 +1,7 @@
 onePasswordSecrets:
   vault: google-analytics-mcp
   manualItem: google-analytics-mcp_production-manual
-autoscaling:
+hpa:
   enabled: true
 host: mcp-google-analytics.stape.io
 image:
@@ -11,3 +11,14 @@ resources:
   requests:
     cpu: 150m
     memory: 400Mi
+
+# HPA on cpu -> memory only. thor 7d peak 2763Mi. minAllowed memory: request / 2 rounded down to a power of 2;
+# maxAllowed memory (no limit): peak x2 rounded up to 6Gi
+vpa:
+  controlledResources: ["memory"]
+  minAllowed:
+    cpu: null
+    memory: 128Mi
+  maxAllowed:
+    cpu: null
+    memory: 6Gi
