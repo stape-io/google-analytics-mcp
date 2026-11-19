@@ -17,6 +17,8 @@ resources:
 vpa:
   controlledResources: ["memory"]
   minAllowed:
+    cpu: null
     memory: 128Mi
   maxAllowed:
+    cpu: null
     memory: 6Gi

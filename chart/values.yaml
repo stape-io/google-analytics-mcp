@@ -11,9 +11,18 @@ resources:
 hpa:
   enabled: false
 
+# iris 7d peak 175m / 157Mi. minAllowed memory: request / 2 rounded down to a power of 2;
+# maxAllowed (no limits): cpu peak x2 rounded up to 100m, memory peak x2 rounded up to a power of 2
 vpa:
   enabled: true
   updateMode: InPlaceOrRecreate
+  controlledResources: ["cpu", "memory"]
+  minAllowed:
+    cpu: 10m
+    memory: 64Mi
+  maxAllowed:
+    cpu: 400m
+    memory: 512Mi
 
 # Items named in full: a rename in 1Password then fails loudly instead of
 # yielding a Secret with no fields. See templates/onepassword-items.yaml.
